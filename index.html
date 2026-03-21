@@ -2878,12 +2878,32 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
 
                         for (let line of lines) {
                             line = line.trim();
-                            if (!line || !line.startsWith("data:")) continue;
-                            const jsonStr = line.replace("data:", "").trim();
-                            if (jsonStr === "[DONE]") continue;
+                            if (!line) continue;
+
+                            let jsonStr = "";
+                            if (line.startsWith("data:")) {
+                                jsonStr = line.substring(5).trim();
+                                if (jsonStr === "[DONE]") continue;
+                            } else if (line.startsWith("{") && line.includes('"error"')) {
+                                jsonStr = line;
+                            } else {
+                                continue;
+                            }
 
                             try {
                                 const data = JSON.parse(jsonStr);
+                                
+                                if (data.error) {
+                                    if (!document.getElementById(currentStreamingMsgId)) {
+                                        appendMessageUI({ role: 'ai', content: '', timestamp: getTimeString(), personaName: getActivePersona().name }, getActiveChat().messages.length, currentStreamingMsgId);
+                                    }
+                                    fullResponse += `\n\n**API Error:** ${data.error.message || "Unknown error"}`;
+                                    contentUpdated = true;
+                                    const mdContainer = document.querySelector(`#${currentStreamingMsgId} .markdown-body`);
+                                    if (mdContainer) mdContainer.innerHTML = DOMPurify.sanitize(marked.parse(fullResponse));
+                                    continue;
+                                }
+
                                 const delta = data.choices?.[0]?.delta;
                                 if (delta) {
                                     const content = delta.content || "";
