@@ -167,13 +167,21 @@ async def chat_endpoint(request: Request):
             async with httpx.AsyncClient() as client:
                 req = client.build_request("POST", "https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
                 r = await client.send(req, stream=True)
+                
+                if r.status_code != 200:
+                    error_text = await r.aread()
+                    error_msg = f"**OpenRouter API Error (HTTP {r.status_code}):**\n```json\n{error_text.decode('utf-8')}\n```"
+                    yield f"data: {json.dumps({'choices': [{'delta': {'content': error_msg}}]})}\n\n".encode('utf-8')
+                    yield b"data: [DONE]\n\n"
+                    return
+
                 async for chunk in r.aiter_bytes():
                     yield chunk
         except Exception as e:
             # 🔥 THE FIX: Catch the crash if OpenRouter rejects massive image files
             print(f"❌ OpenRouter Connection Error: {str(e)}")
             error_data = {
-                "choices": [{"delta": {"content": "\n\n**Network Error:** OpenRouter rejected the connection. The image you attached is likely too large for their servers to process."}}]
+                "choices": [{"delta": {"content": f"\n\n**Network Error:** {str(e)}"}}]
             }
             # Yield the error directly to the chat bubble so it doesn't freeze!
             yield f"data: {json.dumps(error_data)}\n\n".encode('utf-8')
