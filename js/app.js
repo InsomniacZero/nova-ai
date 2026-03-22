@@ -1626,8 +1626,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const aiAvatarHtml = `<div class="w-8 h-8 shrink-0 mt-1 avatar-glow-wrapper"><div class="avatar-glow-inner"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div>`;
 
             // 🔥 THE NEW FEATURE: Check if the message contains a processed image
-            const hasBase64Image = /!\[.*?\]\((data:image\/[^;]+;base64,[^\)]+)\)/.test(safeContent);
-            const dlBtnHtml = hasBase64Image ? `<button class="download-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" title="Download Image"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>` : '';
+            // Detect ANY inline image (base64 OR Cloudinary/external URL) to show the download button
+            const hasInlineImage = /!\[.*?\]\((https?:\/\/[^\)]+|data:image\/[^;]+;base64,[^\)]+)\)/.test(safeContent);
+            const dlBtnHtml = hasInlineImage ? `<button class="download-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" title="Download Image"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>` : '';
 
             const footerHtml = `
                         <div class="flex items-center gap-0.5 mt-3 pt-1">
