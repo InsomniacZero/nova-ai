@@ -1269,6 +1269,11 @@ document.addEventListener('DOMContentLoaded', () => {
     userProfileBtn.addEventListener('click', () => {
         profileNameInput.value = userProfile.name;
         tempProfileImage = userProfile.avatar;
+        // Populate the new Discord-style fields
+        const emailEl = document.getElementById('profile-email-display');
+        if (emailEl && currentUser) emailEl.textContent = currentUser.email || '';
+        const namePreview = document.getElementById('profile-display-name-preview');
+        if (namePreview) namePreview.textContent = userProfile.name || 'User';
         updateProfilePreview();
         openModal(profileModal, profileModalContent);
     });
