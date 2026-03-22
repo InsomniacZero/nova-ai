@@ -1656,7 +1656,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isGenerating = true;
         setSendButtonState('generating');
         scrollToBottom();
-        showTyping();
 
         // 🔥 NEW: Thinking Indicator
         const thinkingHtml = `<div class="msg-container flex items-start gap-4 transition-opacity duration-300" id="ai-thinking-indicator"><div class="w-8 h-8 shrink-0 mt-1 rounded-full bg-[#1e1f20] border border-[#333537] flex items-center justify-center animate-pulse-ring shadow-[0_0_15px_rgba(59,130,246,0.3)]"><div class="avatar-glow-inner w-full h-full"><svg class="text-white w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 flex items-center h-10"><span class="text-[15px] font-medium text-blue-400/80 animate-pulse tracking-wide">Thinking...</span></div></div>`;
