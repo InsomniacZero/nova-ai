@@ -21,6 +21,16 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <style>
+        .msg-container { content-visibility: auto; contain-intrinsic-size: 100px; }
+        .glass-panel { 
+            backdrop-filter: blur(24px); 
+            -webkit-backdrop-filter: blur(24px); 
+            will-change: backdrop-filter; 
+            background-color: rgba(30, 31, 32, 0.75); 
+        }
+    </style>
+
     <link rel="icon" type="image/png" href="Nova.png">
 </head>
 
@@ -80,7 +90,7 @@
     <div id="sidebar-backdrop"></div>
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="w-72 bg-[#1e1f20]/90 backdrop-blur-2xl flex-col transition-all duration-300 flex h-full border-r border-[#333537]/50 relative z-20 shrink-0">
+        class="w-72 glass-panel flex-col transition-all duration-300 flex h-full border-r border-[#333537]/50 relative z-20 shrink-0">
         <div class="px-4 pb-4 pt-4">
             <button id="new-chat-btn"
                 class="w-full flex items-center gap-3 bg-[#131314] hover:bg-[#1e1f20] text-gray-200 px-4 py-3 rounded-xl transition-all duration-300 border border-blue-500/30 hover:border-blue-400/60 shadow-[0_0_10px_rgba(59,130,246,0.05)] hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
@@ -134,7 +144,7 @@
     <!-- Main Content -->
     <main class="flex-1 flex flex-col h-full relative w-full overflow-hidden min-w-0">
         <header
-            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-transparent sm:bg-[#131314]/75 sm:backdrop-blur-xl border-b border-transparent sm:border-[#333537]/50 transition-colors">
+            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 glass-panel border-b border-transparent sm:border-[#333537]/50 transition-colors">
 
             <div id="header-chat-title"
                 class="absolute left-1/2 transform -translate-x-1/2 text-[15px] font-medium text-gray-300 truncate w-[45%] text-center pointer-events-none hidden sm:block">
@@ -243,7 +253,9 @@
                         <span class="gradient-text animate-gradient-x bg-[length:200%_200%]">Hello, <span
                                 id="greeting-name">User</span></span>
                     </h1>
-                    <h2 class="text-5xl font-semibold text-[#444749] tracking-tight mb-8">How can I help you today?</h2>
+                    <h2 class="text-5xl font-semibold tracking-tight mb-8">
+                        <span class="bg-clip-text text-transparent bg-gradient-to-r from-gray-400 to-[#444749] animate-pulse">How can I help you today?</span>
+                    </h2>
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl">
                         <button
@@ -283,7 +295,7 @@
             </svg>
         </button>
 
-        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30">
+        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#131314] via-[#131314]/90 to-transparent">
             <div class="w-full max-w-2xl">
 
                 <div class="max-w-4xl mx-auto w-full relative pointer-events-auto">
@@ -315,7 +327,7 @@
                         <input type="file" id="chat-file-input" class="hidden"
                             accept=".txt,.md,.json,.js,.py,.html,.css,.csv,.xml,.env,.log" multiple> <textarea
                             id="chat-input" rows="1"
-                            class="w-full bg-transparent resize-none outline-none px-4 py-3 max-h-48 text-[15px] text-gray-200 overflow-y-auto placeholder-gray-500"
+                            class="w-full bg-transparent resize-none outline-none px-4 py-3 max-h-48 text-[15px] text-gray-200 overflow-y-auto placeholder-gray-500 focus:ring-0 transition-shadow rounded-xl"
                             placeholder="Type a message..."></textarea>
 
                         <div class="flex justify-between items-center px-2 pb-1">

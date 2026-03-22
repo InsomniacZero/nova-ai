@@ -1770,14 +1770,43 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                     const decoder = new TextDecoder();
                     let fullText = "";
                     let streamBuffer = "";
+                    let isRawJsonError = false;
+                    let rawJsonBuffer = "";
 
                     let lastRenderTime = 0; // 🔥 THE CRASH FIX 2: Track rendering speed
 
                     while (true) {
                         const { done, value } = await reader.read();
-                        if (done) break;
+                        if (done) {
+                            if (isRawJsonError && rawJsonBuffer) {
+                                try {
+                                    const data = JSON.parse(rawJsonBuffer);
+                                    if (data.error) {
+                                        if (!document.getElementById(currentStreamingMsgId)) {
+                                            appendMessageUI({ role: 'ai', content: '', timestamp: getTimeString(), personaName: getActivePersona().name }, getActiveChat().messages.length, currentStreamingMsgId);
+                                        }
+                                        fullText += `\n\n**API Error:** ${data.error.message || "Unknown error"}`;
+                                        contentUpdated = true;
+                                        const mdContainer = document.querySelector(`#${currentStreamingMsgId} .markdown-body`);
+                                        if (mdContainer) mdContainer.innerHTML = DOMPurify.sanitize(marked.parse(fullText));
+                                    }
+                                } catch(e) {}
+                            }
+                            break;
+                        }
 
-                        streamBuffer += decoder.decode(value, { stream: true });
+                        const chunkString = decoder.decode(value, { stream: true });
+
+                        if (streamBuffer === "" && rawJsonBuffer === "" && chunkString.trimStart().startsWith("{")) {
+                            isRawJsonError = true;
+                        }
+
+                        if (isRawJsonError) {
+                            rawJsonBuffer += chunkString;
+                            continue;
+                        }
+
+                        streamBuffer += chunkString;
                         const lines = streamBuffer.split("\n");
                         streamBuffer = lines.pop();
 
@@ -1785,31 +1814,12 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
 
                         for (let line of lines) {
                             line = line.trim();
-                            if (!line) continue;
-
-                            let jsonStr = "";
-                            if (line.startsWith("data:")) {
-                                jsonStr = line.substring(5).trim();
-                                if (jsonStr === "[DONE]") continue;
-                            } else if (line.startsWith("{") && line.includes('"error"')) {
-                                jsonStr = line;
-                            } else {
-                                continue;
-                            }
+                            if (!line || !line.startsWith("data:")) continue;
+                            const jsonStr = line.substring(5).trim();
+                            if (jsonStr === "[DONE]") continue;
 
                             try {
                                 const data = JSON.parse(jsonStr);
-                                
-                                if (data.error) {
-                                    if (!document.getElementById(currentStreamingMsgId)) {
-                                        appendMessageUI({ role: 'ai', content: '', timestamp: getTimeString(), personaName: getActivePersona().name }, getActiveChat().messages.length, currentStreamingMsgId);
-                                    }
-                                    fullResponse += `\n\n**API Error:** ${data.error.message || "Unknown error"}`;
-                                    contentUpdated = true;
-                                    const mdContainer = document.querySelector(`#${currentStreamingMsgId} .markdown-body`);
-                                    if (mdContainer) mdContainer.innerHTML = DOMPurify.sanitize(marked.parse(fullResponse));
-                                    continue;
-                                }
 
                                 const delta = data.choices?.[0]?.delta;
                                 if (delta) {
