@@ -1966,11 +1966,19 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
         if (!btn) return;
         const maxScroll = chatContainer.scrollHeight - chatContainer.clientHeight;
         if (maxScroll - chatContainer.scrollTop > 300) {
-            btn.classList.remove('hidden');
-            setTimeout(() => btn.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none'), 10);
+            if (btn.classList.contains('hidden')) {
+                btn.classList.remove('hidden');
+                setTimeout(() => btn.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none'), 10);
+            }
         } else {
-            btn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
-            setTimeout(() => btn.classList.add('hidden'), 300);
+            if (!btn.classList.contains('translate-y-20')) {
+                btn.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+                setTimeout(() => {
+                    if (btn.classList.contains('translate-y-20')) {
+                        btn.classList.add('hidden');
+                    }
+                }, 300);
+            }
         }
     }, { passive: true });
 
