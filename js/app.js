@@ -1488,7 +1488,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 let layoutClass = count === 1 ? "flex max-w-[280px]" : count === 2 ? "grid grid-cols-2 max-w-[380px]" : "grid grid-cols-2 sm:grid-cols-3 max-w-[450px]";
                 let imgClass = count === 1 ? "max-h-[350px] w-auto object-cover rounded-2xl" : "aspect-square w-full object-cover rounded-xl hover:scale-[1.02] transition-transform";
 
-                imageHtml = `<div class="${layoutClass} gap-2 mb-3 ml-auto">` +
+                imageHtml = `<div class="${layoutClass} gap-2 mb-1.5 ml-auto">` +
                     msgObj.images.map(img => `<img src="${img}" class="${imgClass} border border-[#333537]/80 shadow-sm" loading="lazy" decoding="async">`).join('') +
                     `</div>`;
             }
@@ -1496,11 +1496,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // 🔥 NEW: Build File Chips for the Chat Bubble
             let filesHtml = '';
             if (msgObj.files && msgObj.files.length > 0) {
-                filesHtml = `<div class="flex flex-wrap gap-2 mb-3 ml-auto justify-end">` +
+                filesHtml = `<div class="flex flex-wrap gap-2 mb-1.5 ml-auto justify-end">` +
                     msgObj.files.map(f => `
-                                <div class="flex items-center gap-2 bg-[#1e1f20]/50 border border-[#ffffff]/20 rounded-lg px-3 py-2">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    <span class="text-xs text-white font-mono truncate max-w-[150px]"></span>
+                                <div class="flex items-center gap-2 bg-[#282a2c]/80 border border-[#444749]/50 rounded-lg px-3 py-2 shadow-sm">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                                    <span class="text-xs text-gray-200 font-mono truncate max-w-[150px]">${f.name}</span>
                                 </div>
                             `).join('') + `</div>`;
             }
@@ -1513,11 +1513,19 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="text-xs text-gray-600">${timeStr}</span>
                                 <span class="text-sm text-gray-300 font-medium">${userFirstName}</span>
                             </div>
-                            <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-white shadow-sm border border-transparent transition-colors relative group">
+                            <!-- Media Floating Above -->
+                            <div class="relative group w-full flex flex-col items-end">
                                 ${imageHtml}
                                 ${filesHtml}
-                                ${textContent.replace(/\n/g, '<br>')}
-                                <div class="msg-options absolute top-1/2 -translate-y-1/2 -left-12 flex gap-1 bg-[#131314] rounded-lg shadow-md border border-[#333537] p-1">
+                                
+                                <!-- Core Text Bubble -->
+                                ${textContent.trim() ? `
+                                <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-white shadow-sm border border-transparent transition-colors relative">
+                                    ${textContent.replace(/\n/g, '<br>')}
+                                </div>
+                                ` : ''}
+
+                                <div class="msg-options absolute bottom-0 -left-12 flex gap-1 bg-[#131314] rounded-lg shadow-md border border-[#333537] p-1">
                                     <button class="edit-msg-btn p-1.5 hover:bg-[#282a2c] rounded-md text-gray-400 hover:text-blue-400 transition-colors" data-index="${msgIndex}" title="Edit message"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
                                 </div>
                             </div>
