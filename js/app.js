@@ -1248,14 +1248,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function switchTab(tab) {
+        const activeClass = 'flex-1 py-1.5 text-sm font-semibold rounded-lg bg-[#333537] text-white shadow-sm transition-all text-center';
+        const inactiveClass = 'flex-1 py-1.5 text-sm font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-[#2a2b2d] transition-all text-center';
+
         if (tab === 'api') {
-            tabApi.className = 'px-4 py-2 text-sm font-medium text-blue-400 border-b-2 border-blue-400 transition-colors';
-            tabPrompt.className = 'px-4 py-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-200 transition-colors';
+            tabApi.className = activeClass;
+            tabPrompt.className = inactiveClass;
             apiSettingsView.classList.remove('hidden');
             promptSettingsView.classList.add('hidden');
         } else if (tab === 'prompt') {
-            tabPrompt.className = 'px-4 py-2 text-sm font-medium text-blue-400 border-b-2 border-blue-400 transition-colors';
-            tabApi.className = 'px-4 py-2 text-sm font-medium text-gray-400 border-b-2 border-transparent hover:text-gray-200 transition-colors';
+            tabPrompt.className = activeClass;
+            tabApi.className = inactiveClass;
             promptSettingsView.classList.remove('hidden');
             apiSettingsView.classList.add('hidden');
         }
