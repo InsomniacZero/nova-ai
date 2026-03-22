@@ -285,6 +285,22 @@
             </div>
         </div>
 
+        <!-- ======= IMAGE LIGHTBOX ======= -->
+        <div id="image-lightbox" class="fixed inset-0 z-[200] hidden flex-col bg-[#131314]/95 backdrop-blur-sm" role="dialog">
+            <div class="flex items-center gap-4 px-4 py-3 shrink-0">
+                <button id="lightbox-close-btn" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-300 hover:bg-[#333537] transition-colors">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                </button>
+                <span id="lightbox-filename" class="text-sm text-gray-300 font-medium truncate">image.jpg</span>
+            </div>
+            <div class="flex-1 flex items-center justify-center p-6 overflow-auto" id="lightbox-backdrop">
+                <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full object-contain rounded-2xl shadow-2xl select-none" draggable="false">
+            </div>
+        </div>
+
         <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#131314] via-[#131314]/90 to-transparent">
             <div class="w-full max-w-2xl">
 
@@ -573,7 +589,7 @@
             </div>
         </div>
     </div>
-    <script type="module" src="js/app.js?v=2.2"></script>
+    <script type="module" src="js/app.js?v=2.3"></script>
 
 </body>
 

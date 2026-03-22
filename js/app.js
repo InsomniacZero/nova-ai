@@ -1998,4 +1998,64 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
         chatContainer.scrollTo({ top: chatContainer.scrollHeight, behavior: 'smooth' });
     });
 
+    // =========================================
+    // 🖼️ IMAGE LIGHTBOX
+    // =========================================
+    const lightbox = document.getElementById('image-lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxFilename = document.getElementById('lightbox-filename');
+    const lightboxCloseBtn = document.getElementById('lightbox-close-btn');
+    const lightboxBackdrop = document.getElementById('lightbox-backdrop');
+
+    function openLightbox(src, filename) {
+        lightboxImg.src = src;
+        lightboxFilename.textContent = filename || 'image.jpg';
+        lightbox.classList.remove('hidden');
+        lightbox.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+        lightbox.classList.add('hidden');
+        lightbox.classList.remove('flex');
+        document.body.style.overflow = '';
+        lightboxImg.src = '';
+    }
+
+    // Delegated click on any image inside the chat
+    chatInner.addEventListener('click', (e) => {
+        const img = e.target.closest('img');
+        if (!img) return;
+        // Don't open the avatar images (they are inside avatar wrappers)
+        if (img.closest('.avatar-glow-wrapper') || img.closest('.user-glow-wrapper')) return;
+
+        const src = img.src;
+        // Try to derive a sensible filename
+        let filename = 'image.jpg';
+        if (img.alt && img.alt.trim()) {
+            filename = img.alt.trim();
+        } else if (src.startsWith('data:image/')) {
+            const ext = src.split(';')[0].split('/')[1] || 'jpg';
+            filename = `image.${ext}`;
+        } else {
+            filename = src.split('/').pop().split('?')[0] || 'image.jpg';
+        }
+        openLightbox(src, filename);
+    });
+
+    // Close on back button
+    lightboxCloseBtn?.addEventListener('click', closeLightbox);
+
+    // Close when clicking outside the image (on the dark backdrop)
+    lightboxBackdrop?.addEventListener('click', (e) => {
+        if (e.target === lightboxBackdrop) closeLightbox();
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+            closeLightbox();
+        }
+    });
+
 });
