@@ -502,7 +502,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileImageInput = document.getElementById('profile-image-input');
     const profileAvatarPreview = document.getElementById('profile-avatar-preview');
     const profileAvatarPreviewText = document.getElementById('profile-avatar-preview-text');
-    const removeProfilePicBtn = document.getElementById('remove-profile-pic-btn');
     const greetingName = document.getElementById('greeting-name');
     const userProfileInitial = document.getElementById('user-profile-initial');
 
@@ -1401,22 +1400,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    removeProfilePicBtn.addEventListener('click', () => {
-        tempProfileImage = null;
-        profileImageInput.value = '';
-        updateProfilePreview();
-    });
+
 
     function updateProfilePreview() {
         if (tempProfileImage) {
             profileAvatarPreview.style.backgroundImage = `url('${tempProfileImage}')`;
             profileAvatarPreviewText.style.display = 'none';
-            removeProfilePicBtn.classList.remove('hidden');
         } else {
             profileAvatarPreview.style.backgroundImage = 'none';
             profileAvatarPreviewText.style.display = 'block';
             profileAvatarPreviewText.textContent = (profileNameInput.value || 'U').charAt(0).toUpperCase();
-            removeProfilePicBtn.classList.add('hidden');
         }
     }
 
