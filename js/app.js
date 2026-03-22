@@ -1224,7 +1224,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     settingsBtn.addEventListener('click', () => {
-        switchTab('api');
         openModal(settingsModal, settingsModalContent);
     });
     document.getElementById('close-settings-btn').addEventListener('click', () => closeModal(settingsModal, settingsModalContent));
