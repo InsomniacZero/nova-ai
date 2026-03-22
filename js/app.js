@@ -1525,8 +1525,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </div>
                                 ` : ''}
 
-                                <div class="msg-options absolute bottom-0 -left-12 flex gap-1 bg-[#131314] rounded-lg shadow-md border border-[#333537] p-1">
-                                    <button class="edit-msg-btn p-1.5 hover:bg-[#282a2c] rounded-md text-gray-400 hover:text-blue-400 transition-colors" data-index="${msgIndex}" title="Edit message"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button>
+                                <div class="msg-options absolute bottom-1 -left-20 flex gap-1 justify-end opacity-0 group-hover:opacity-100 group-[.active-options]:opacity-100 transition-opacity duration-200">
+                                    <button class="copy-msg-btn p-1.5 hover:bg-[#333537]/80 rounded-full text-gray-400 hover:text-gray-200 transition-colors" data-text="${escapedContent}" title="Copy text">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                    </button>
+                                    <button class="edit-msg-btn p-1.5 hover:bg-[#333537]/80 rounded-full text-gray-400 hover:text-gray-200 transition-colors" data-index="${msgIndex}" title="Edit message">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                    </button>
                                 </div>
                             </div>
                         </div>
