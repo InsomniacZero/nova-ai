@@ -9,9 +9,26 @@ import json
 import os
 import time
 import traceback
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # --- CONFIGURATION ---
-STABILITY_API_KEY = "sk-3vqIeLFsnCliF7KtyxEwQtm1TLqxlVvSrkdtpdpnEnoO2pfL"
+STABILITY_API_KEY = os.environ.get("STABILITY_API_KEY", "sk-3vqIeLFsnCliF7KtyxEwQtm1TLqxlVvSrkdtpdpnEnoO2pfL")
+
+OPENROUTER_KEYS = [k.strip() for k in os.environ.get("OPENROUTER_KEYS", "").split(",") if k.strip()]
+current_key_index = 0
+
+def get_active_or_key():
+    if not OPENROUTER_KEYS:
+        return ""
+    return OPENROUTER_KEYS[current_key_index]
+
+def rotate_or_key():
+    global current_key_index
+    if not OPENROUTER_KEYS: return
+    current_key_index = (current_key_index + 1) % len(OPENROUTER_KEYS)
+    print(f"🔄 Rotated OpenRouter API Key. Now using key index: {current_key_index}")
 
 app = FastAPI()
 
@@ -163,29 +180,48 @@ async def chat_endpoint(request: Request):
         return StreamingResponse(tool_stream(), media_type="text/event-stream")
 
     async def openrouter_stream():
-        try:
-            async with httpx.AsyncClient() as client:
-                req = client.build_request("POST", "https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
-                r = await client.send(req, stream=True)
+        max_attempts = max(1, len(OPENROUTER_KEYS))
+        
+        for attempt in range(max_attempts):
+            try:
+                # Override the generic frontend auth with the actual rotated secure backend key
+                headers["Authorization"] = f"Bearer {get_active_or_key()}"
                 
-                if r.status_code != 200:
-                    error_text = await r.aread()
-                    error_msg = f"**OpenRouter API Error (HTTP {r.status_code}):**\n```json\n{error_text.decode('utf-8')}\n```"
-                    yield f"data: {json.dumps({'choices': [{'delta': {'content': error_msg}}]})}\n\n".encode('utf-8')
-                    yield b"data: [DONE]\n\n"
-                    return
+                async with httpx.AsyncClient() as client:
+                    req = client.build_request("POST", "https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
+                    r = await client.send(req, stream=True)
+                    
+                    if r.status_code in [401, 402, 429]:
+                        error_text = await r.aread()
+                        print(f"⚠️ Key {current_key_index} rejected or out of credits (HTTP {r.status_code}). Rotating...")
+                        rotate_or_key()
+                        continue # Retry silently!
+                        
+                    elif r.status_code != 200:
+                        error_text = await r.aread()
+                        error_msg = f"**OpenRouter API Error (HTTP {r.status_code}):**\n```json\n{error_text.decode('utf-8')}\n```"
+                        yield f"data: {json.dumps({'choices': [{'delta': {'content': error_msg}}]})}\n\n".encode('utf-8')
+                        yield b"data: [DONE]\n\n"
+                        return
 
-                async for chunk in r.aiter_bytes():
-                    yield chunk
-        except Exception as e:
-            # 🔥 THE FIX: Catch the crash if OpenRouter rejects massive image files
-            print(f"❌ OpenRouter Connection Error: {str(e)}")
-            error_data = {
-                "choices": [{"delta": {"content": f"\n\n**Network Error:** {str(e)}"}}]
-            }
-            # Yield the error directly to the chat bubble so it doesn't freeze!
-            yield f"data: {json.dumps(error_data)}\n\n".encode('utf-8')
-            yield b"data: [DONE]\n\n"
+                    async for chunk in r.aiter_bytes():
+                        yield chunk
+                    return # Successfully streamed!
+                    
+            except Exception as e:
+                # 🔥 THE FIX: Catch the crash if OpenRouter rejects massive image files
+                print(f"❌ OpenRouter Connection Error: {str(e)}")
+                error_data = {
+                    "choices": [{"delta": {"content": f"\n\n**Network Error:** {str(e)}"}}]
+                }
+                # Yield the error directly to the chat bubble so it doesn't freeze!
+                yield f"data: {json.dumps(error_data)}\n\n".encode('utf-8')
+                yield b"data: [DONE]\n\n"
+                return
+                
+        # If we exhausted the entire array of keys and they all returned 401/402
+        yield f"data: {json.dumps({'choices': [{'delta': {'content': '**API Error:** All configured OpenRouter keys have failed or are out of credits! Please check your keys.'}}]})}\n\n".encode('utf-8')
+        yield b"data: [DONE]\n\n"
 
     return StreamingResponse(openrouter_stream(), media_type="text/event-stream")
 

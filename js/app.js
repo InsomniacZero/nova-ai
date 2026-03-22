@@ -590,30 +590,6 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal(createPersonaModal, createPersonaContent);
     });
 
-    // --- OPENROUTER API POOL ---
-    const OPENROUTER_KEYS = [
-        "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",
-        "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",
-        "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",
-        "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",
-        "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",
-        "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"
-    ];
-    let currentKeyIndex = 0;
-
-    function getActiveApiKey() {
-        return OPENROUTER_KEYS[currentKeyIndex];
-    }
-
-    function rotateApiKey() {
-        currentKeyIndex++;
-        if (currentKeyIndex >= OPENROUTER_KEYS.length) {
-            currentKeyIndex = 0;
-            return false;
-        }
-        return true;
-    }
-
     // Settings Variables
     let OR_TEXT_MODEL = localStorage.getItem('or_text_model') || 'x-ai/grok-4-fast';
     let OR_VISION_MODEL = localStorage.getItem('or_vision_model') || 'x-ai/grok-4-fast';
@@ -1540,7 +1516,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     msgObj.files.map(f => `
                                 <div class="flex items-center gap-2 bg-[#1e1f20]/50 border border-[#ffffff]/20 rounded-lg px-3 py-2">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-white"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                                    <span class="text-xs text-white font-mono truncate max-w-[150px]">${f.name}</span>
+                                    <span class="text-xs text-white font-mono truncate max-w-[150px]"></span>
                                 </div>
                             `).join('') + `</div>`;
             }
@@ -1590,7 +1566,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (msgObj.status === 'error') {
                 html = `<div class="msg-container flex items-start gap-4 ${animate ? 'opacity-0 transition-opacity duration-300' : ''}"><div class="w-8 h-8 shrink-0 rounded-full flex items-center justify-center bg-gradient-to-tr from-red-600 to-orange-500 mt-1"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg></div><div class="flex-1 min-w-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-red-400 font-medium">System Error</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="text-[15px] leading-relaxed text-gray-200 mt-2 bg-red-900/20 border border-red-500/30 px-4 py-3 rounded-xl text-red-200">${safeContent}</div>${footerHtml}</div></div>`;
             } else {
-                html = `<div class="msg-container flex items-start gap-4 group ${animate ? 'opacity-0 transition-opacity duration-300' : ''}">${aiAvatarHtml}<div class="flex-1 min-w-0 pr-12 relative z-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-gray-300 font-medium">${aiNameDisplay}</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="markdown-body text-[15px] leading-relaxed text-gray-200">${parseAIContent(safeContent, false)}</div>${footerHtml}</div></div>`;
+                html = `<div class="msg-container flex items-start gap-4 group" id="${currentStreamingMsgId}"><div class="w-8 h-8 shrink-0 mt-1 avatar-glow-wrapper"><div class="avatar-glow-inner"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 pr-12 relative z-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-gray-300 font-medium">${aiNameDisplay}</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="markdown-body text-[15px] leading-relaxed text-gray-200">${parseAIContent(safeContent, false)}</div>${footerHtml}</div></div>`;
             }
         }
 
@@ -1746,7 +1722,7 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
             const response = await fetch(`${PYTHON_SERVER_URL}/api/chat`, {
                 method: "POST",
                 headers: {
-                    "Authorization": `Bearer ${getActiveApiKey()}`,
+                    "Authorization": "Bearer local-proxy-managed",
                     "HTTP-Referer": window.location.href,
                     "X-Title": "Nova UI",
                     "Content-Type": "application/json"
@@ -1796,23 +1772,6 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                         try {
                             const data = JSON.parse(rawJsonBuffer);
                             if (data.error) {
-                                // AUTO-ROTATE LOGIC
-                                const errMsg = (data.error.message || "").toLowerCase();
-                                if (data.error.code === 402 || data.error.code === 401 || errMsg.includes("credit") || errMsg.includes("balance") || errMsg.includes("key") || errMsg.includes("auth")) {
-                                    console.warn("API key exhausted/failed. Rotating key...");
-                                    const rotated = rotateApiKey();
-                                    if (rotated) {
-                                        document.getElementById('ai-thinking-indicator')?.remove();
-                                        if (currentStreamingMsgId) document.getElementById(currentStreamingMsgId)?.remove();
-
-                                        // Avoid infinite recursion by setting a tiny timeout
-                                        setTimeout(() => {
-                                            startMessageFlow(isRegen ? text : chatInput.value.trim(), imagesToUse, filesToUse);
-                                        }, 200);
-                                        return;
-                                    }
-                                }
-
                                 if (!document.getElementById(currentStreamingMsgId)) {
                                     appendMessageUI({ role: 'ai', content: '', timestamp: getTimeString(), personaName: getActivePersona().name }, getActiveChat().messages.length, currentStreamingMsgId);
                                 }
