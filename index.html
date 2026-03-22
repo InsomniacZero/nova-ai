@@ -470,21 +470,10 @@
             </div>
 
             <!-- Scrollable Body -->
-            <div class="p-6 overflow-y-auto overflow-x-hidden">
-                <!-- Segmented Tabs -->
-                <div class="flex p-1 bg-[#131314] rounded-xl mb-6 border border-[#2d2e30]">
-                    <button id="tab-api"
-                        class="flex-1 py-1.5 text-sm font-semibold rounded-lg bg-[#333537] text-white shadow-sm transition-all text-center">
-                        Model Settings
-                    </button>
-                    <button id="tab-prompt"
-                        class="flex-1 py-1.5 text-sm font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-[#2a2b2d] transition-all text-center">
-                        Current Personality
-                    </button>
-                </div>
-
+            <div class="p-6 overflow-y-auto overflow-x-hidden space-y-8">
+                
                 <!-- Model Settings Tab -->
-                <div id="api-settings-view" class="space-y-5 block">
+                <div id="api-settings-view" class="space-y-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div class="space-y-1.5">
                             <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Text Model (Default)</label>
@@ -499,8 +488,10 @@
                     </div>
                 </div>
 
+                <div class="h-px bg-[#333537]"></div>
+
                 <!-- Personality Settings Tab -->
-                <div id="prompt-settings-view" class="space-y-5 hidden">
+                <div id="prompt-settings-view" class="space-y-5">
                     <div class="space-y-1.5">
                         <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 flex items-center justify-between">
                             <span>System Prompt for <span id="settings-persona-name-label" class="text-blue-400 font-bold ml-1">Nova</span></span>
@@ -686,7 +677,7 @@
             </div>
         </div>
     </div>
-    <script type="module" src="js/app.js?v=3.3"></script>
+    <script type="module" src="js/app.js?v=3.4"></script>
 
 </body>
 

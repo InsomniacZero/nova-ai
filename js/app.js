@@ -483,10 +483,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const settingsModalContent = document.getElementById('settings-modal-content');
     const settingsBtn = document.getElementById('settings-btn');
 
-    const tabApi = document.getElementById('tab-api');
-    const tabPrompt = document.getElementById('tab-prompt');
-    const apiSettingsView = document.getElementById('api-settings-view');
-    const promptSettingsView = document.getElementById('prompt-settings-view');
+
 
     const apiKeyInput = document.getElementById('api-key-input');
     const apiTextModelInput = document.getElementById('api-text-model-input');
@@ -1247,24 +1244,7 @@ document.addEventListener('DOMContentLoaded', () => {
         closeModal(settingsModal, settingsModalContent);
     });
 
-    function switchTab(tab) {
-        const activeClass = 'flex-1 py-1.5 text-sm font-semibold rounded-lg bg-[#333537] text-white shadow-sm transition-all text-center';
-        const inactiveClass = 'flex-1 py-1.5 text-sm font-medium rounded-lg text-gray-400 hover:text-gray-200 hover:bg-[#2a2b2d] transition-all text-center';
 
-        if (tab === 'api') {
-            tabApi.className = activeClass;
-            tabPrompt.className = inactiveClass;
-            apiSettingsView.classList.remove('hidden');
-            promptSettingsView.classList.add('hidden');
-        } else if (tab === 'prompt') {
-            tabPrompt.className = activeClass;
-            tabApi.className = inactiveClass;
-            promptSettingsView.classList.remove('hidden');
-            apiSettingsView.classList.add('hidden');
-        }
-    }
-    tabApi.addEventListener('click', () => switchTab('api'));
-    tabPrompt.addEventListener('click', () => switchTab('prompt'));
 
     let tempProfileImage = null;
     // ── Paste your 5 anime image URLs here ──
