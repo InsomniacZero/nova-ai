@@ -1056,22 +1056,37 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } else if (downloadBtn) {
-            // 🔥 THE NEW DOWNLOAD LOGIC
+            // 📥 Download: works for both base64 blobs and Cloudinary URLs
             const msgContainer = downloadBtn.closest('.msg-container');
-            const imgElement = msgContainer ? msgContainer.querySelector('img[src^="data:image"]') : null;
+            // Find any image in the message (base64 OR external URL)
+            const imgElement = msgContainer ? msgContainer.querySelector('img:not(.avatar-glow-wrapper img)') : null;
 
             if (imgElement) {
                 const originalHTML = downloadBtn.innerHTML;
                 downloadBtn.innerHTML = `<span class="text-xs font-bold text-green-400">Downloading...</span>`;
 
-                // Create a temporary link and force a download
-                const a = document.createElement('a');
-                a.href = imgElement.src;
-                a.download = `Nova_Image_${Date.now()}.png`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
+                try {
+                    // Fetch as blob to handle both base64 data URIs and CORS external URLs
+                    const res = await fetch(imgElement.src);
+                    const blob = await res.blob();
+                    const blobUrl = URL.createObjectURL(blob);
 
+                    const ext = blob.type.split('/')[1] || 'png';
+                    const a = document.createElement('a');
+                    a.href = blobUrl;
+                    a.download = `Nova_Image_${Date.now()}.${ext}`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+
+                    downloadBtn.innerHTML = `<span class="text-xs font-bold text-green-400">Done!</span>`;
+                } catch (err) {
+                    console.error('Download failed:', err);
+                    // Last resort: open image in new tab
+                    window.open(imgElement.src, '_blank');
+                    downloadBtn.innerHTML = `<span class="text-xs font-bold text-yellow-400">Opened!</span>`;
+                }
                 setTimeout(() => downloadBtn.innerHTML = originalHTML, 2000);
             }
 
