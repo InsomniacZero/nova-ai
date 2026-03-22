@@ -394,8 +394,10 @@
             #sidebar.collapsed .sidebar-text {
                 opacity: 0;
                 width: 0;
-                pointer-events: none;
-                transition: opacity 0.2s;
+                margin: 0;
+                padding: 0;
+                overflow: hidden;
+                transition: opacity 0.1s ease-out, width 0s 0.1s;
             }
             #sidebar.collapsed #history-container {
                 opacity: 0;
@@ -410,6 +412,7 @@
                 justify-content: center;
                 padding-left: 0;
                 padding-right: 0;
+                gap: 0;
             }
             #sidebar.collapsed #new-chat-btn svg {
                 margin: 0;

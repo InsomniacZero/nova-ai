@@ -1588,7 +1588,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function setSendButtonState(state) {
         if (state === 'disabled') {
-            sendBtn.className = 'p-2 bg-[#333537] text-gray-500 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10';
+            sendBtn.className = 'p-2 bg-[#333537] text-gray-400 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10';
             sendBtn.setAttribute('disabled', 'true');
             iconSend.classList.remove('hidden'); iconStop.classList.add('hidden');
         } else if (state === 'ready') {
@@ -1742,14 +1742,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // 🔥 THE NEW FEATURE: Check if the message contains a processed image
             // Detect ANY inline image (base64 OR Cloudinary/external URL) to show the download button
             const hasInlineImage = /!\[.*?\]\((https?:\/\/[^\)]+|data:image\/[^;]+;base64,[^\)]+)\)/.test(safeContent);
-            const dlBtnHtml = hasInlineImage ? `<button class="download-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" title="Download Image"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>` : '';
+            const dlBtnHtml = hasInlineImage ? `<button class="download-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-200 hover:bg-[#333537] transition-all" title="Download Image"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg></button>` : '';
 
             const footerHtml = `
                         <div class="flex items-center gap-0.5 mt-3 pt-1">
-                            <button class="copy-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" data-text="${escapedContent}" title="Copy response">
+                            <button class="copy-msg-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-200 hover:bg-[#333537] transition-all" data-text="${escapedContent}" title="Copy response">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                             </button>
-                            <button class="regen-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" data-index="${msgIndex}" title="Regenerate response">
+                            <button class="regen-btn w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-200 hover:bg-[#333537] transition-all" data-index="${msgIndex}" title="Regenerate response">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg>
                             </button>
                             ${dlBtnHtml}
