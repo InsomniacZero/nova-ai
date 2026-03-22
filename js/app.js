@@ -821,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Button Listeners ---
-    chatFileInput.addEventListener('click', function(e) { e.stopPropagation(); this.value = null; });
+    chatFileInput.addEventListener('click', function (e) { e.stopPropagation(); this.value = null; });
     uploadFileBtn.addEventListener('click', (e) => {
         e.preventDefault();
         chatFileInput.click();
@@ -832,7 +832,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Array.from(e.target.files).forEach(file => processChatTextFile(file));
     });
 
-    chatImageInput.addEventListener('click', function(e) { e.stopPropagation(); this.value = null; });
+    chatImageInput.addEventListener('click', function (e) { e.stopPropagation(); this.value = null; });
     uploadImageBtn.addEventListener('click', (e) => {
         e.preventDefault();
         chatImageInput.click();
@@ -1268,11 +1268,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Paste your 5 anime image URLs here ──
     // They must be direct image links (ending in .jpg, .png, .webp etc. OR a CDN URL)
     const ANIME_BACKGROUNDS = [
-        'PASTE_IMAGE_URL_1_HERE',
-        'PASTE_IMAGE_URL_2_HERE',
-        'PASTE_IMAGE_URL_3_HERE',
-        'PASTE_IMAGE_URL_4_HERE',
-        'PASTE_IMAGE_URL_5_HERE',
+        'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219540/wall_-_2_siefa6.jpg',
+        'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219538/wall_-_1_b4jgab.jpg',
+        'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219537/wall_-_5_fy8da6.jpg',
+        'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219536/wall_-_4_qflqyz.jpg',
+        'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219535/wall_-_3_gdt9ub.jpg',
     ];
     let lastBannerIdx = -1;
 
@@ -1372,7 +1372,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             const msg = err.code === 'auth/wrong-password' ? 'Current password is incorrect.'
                 : err.code === 'auth/too-many-requests' ? 'Too many attempts. Try again later.'
-                : 'Failed to update password. Try again.';
+                    : 'Failed to update password. Try again.';
             showStatus(msg, true);
         } finally {
             btn.textContent = 'Update Password';
@@ -1861,7 +1861,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentStreamingMsgId = `stream-${Date.now()}`;
         const timeStr = getTimeString();
         const msgIndex = getActiveChat() ? getActiveChat().messages.length : 0;
-        
+
         const footerHtml = `<div class="flex items-center gap-2 mt-3 pt-2 text-gray-500"><button class="copy-msg-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-text="" title="Copy response" id="live-copy-${currentStreamingMsgId}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button><button class="regen-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-index="${msgIndex}" title="Regenerate response"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg></button></div>`;
         const streamHtml = `<div class="msg-container flex items-start gap-4 group transition-opacity duration-300" id="${currentStreamingMsgId}"><div class="w-8 h-8 shrink-0 mt-1 avatar-glow-wrapper" id="avatar-${currentStreamingMsgId}"><div class="avatar-glow-inner flex justify-center items-center h-full w-full rounded-full animate-pulse-ring shadow-[0_0_15px_rgba(59,130,246,0.3)]"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 pr-12 relative z-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-gray-300 font-medium">${getActivePersona().name}</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="markdown-body text-[15px] leading-relaxed text-gray-200" id="content-${currentStreamingMsgId}"><span class="text-blue-400/80 animate-pulse tracking-wide font-medium">Thinking...</span></div><div id="footer-${currentStreamingMsgId}" class="hidden opacity-0 transition-opacity duration-300">${footerHtml}</div></div></div>`;
         chatInner.insertAdjacentHTML('beforeend', streamHtml);
@@ -2047,14 +2047,14 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                     }
                 }
             }
-            
+
             const footerEl = document.getElementById(`footer-${currentStreamingMsgId}`);
             if (footerEl) {
                 footerEl.classList.remove("hidden");
                 void footerEl.offsetWidth; // Trigger reflow
                 footerEl.classList.remove("opacity-0");
             }
-            
+
             completeGeneration(fullText);
 
         } catch (error) {
@@ -2193,7 +2193,7 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
     chatContainer.addEventListener('scroll', () => {
         const btn = document.getElementById('scroll-to-bottom-btn');
         if (!btn) return;
-        
+
         const maxScroll = chatContainer.scrollHeight - chatContainer.clientHeight;
         const isNearBottom = (maxScroll - chatContainer.scrollTop) <= 300;
 
