@@ -153,6 +153,7 @@
             position: relative;
             z-index: 1;
             border-radius: 50%;
+            margin: 0 3px; /* Prevents overflow clipping from content-visibility bounds */
         }
 
         .avatar-glow-wrapper::before,
