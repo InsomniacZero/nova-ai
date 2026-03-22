@@ -102,16 +102,28 @@
     <div id="sidebar-backdrop"></div>
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="w-72 glass-panel flex-col transition-all duration-300 flex h-full border-r border-[#333537]/50 relative z-20 shrink-0">
-        <div class="px-4 pb-4 pt-4">
+        class="md:w-[260px] w-72 glass-panel flex-col transition-all duration-300 flex h-full border-r border-[#333537]/50 relative z-20 shrink-0 overflow-hidden">
+        
+        <!-- Desktop Top Hamburger -->
+        <div class="px-4 pt-4 pb-2 hidden md:block">
+            <button id="sidebar-collapse-btn" class="p-2 -ml-2 text-gray-400 hover:text-gray-200 hover:bg-[#1e1f20] rounded-lg transition-colors duration-200">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="px-4 pb-4 md:pt-2 pt-4">
             <button id="new-chat-btn"
-                class="w-full flex items-center gap-3 bg-[#131314] hover:bg-[#1e1f20] text-gray-200 px-4 py-3 rounded-xl transition-all duration-300 border border-blue-500/30 hover:border-blue-400/60 shadow-[0_0_10px_rgba(59,130,246,0.05)] hover:shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+                class="w-full flex items-center gap-3 bg-[#131314] hover:bg-[#1e1f20] text-gray-200 px-4 py-3 rounded-xl transition-all duration-300 border border-blue-500/30 hover:border-blue-400/60 shadow-[0_0_10px_rgba(59,130,246,0.05)] hover:shadow-[0_0_15px_rgba(59,130,246,0.15)] sidebar-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round" class="text-blue-400 shrink-0">
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
+                    <path d="M12 20h9"></path>
+                    <path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                 </svg>
-                <span class="font-medium text-sm tracking-wide">New chat</span>
+                <span class="font-medium text-sm tracking-wide sidebar-text whitespace-nowrap">New chat</span>
             </button>
         </div>
 
@@ -129,18 +141,18 @@
 
         <div class="p-4 mt-auto space-y-2 bg-[#1e1f20] relative z-10 border-t border-[#333537]/50">
             <button
-                class="w-full flex items-center gap-3 hover:bg-[#2d2f31] p-2.5 rounded-xl transition-colors duration-200 text-sm font-medium text-gray-200 group">
+                class="w-full flex items-center gap-3 hover:bg-[#2d2f31] p-2.5 rounded-xl transition-colors duration-200 text-sm font-medium text-gray-200 group sidebar-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
-                    class="text-gray-400 group-hover:text-gray-200 transition-colors">
+                    class="text-gray-400 group-hover:text-gray-200 transition-colors shrink-0">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 16v-4" />
                     <path d="M12 8h.01" />
                 </svg>
-                Help
+                <span class="sidebar-text whitespace-nowrap">Help</span>
             </button>
             <button id="settings-btn"
-                class="w-full flex items-center gap-3 hover:bg-[#2d2f31] p-2.5 rounded-xl transition-colors duration-200 text-sm font-medium text-gray-200 group">
+                class="w-full flex items-center gap-3 hover:bg-[#2d2f31] p-2.5 rounded-xl transition-colors duration-200 text-sm font-medium text-gray-200 group sidebar-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
                     class="text-gray-400 group-hover:text-gray-200 transition-colors">
@@ -148,7 +160,7 @@
                         d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                     <circle cx="12" cy="12" r="3" />
                 </svg>
-                Settings
+                <span class="sidebar-text whitespace-nowrap">Settings</span>
             </button>
         </div>
     </aside>
@@ -163,7 +175,7 @@
             </div>
 
             <div class="flex items-center gap-3 relative z-10">
-                <button class="hover:bg-[#333537] p-2 rounded-full transition-colors" id="header-menu-btn"
+                <button class="hover:bg-[#333537] p-2 rounded-full transition-colors md:hidden" id="header-menu-btn"
                     title="Toggle Sidebar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
@@ -677,7 +689,7 @@
             </div>
         </div>
     </div>
-    <script type="module" src="js/app.js?v=3.8"></script>
+    <script type="module" src="js/app.js?v=3.9"></script>
 
 </body>
 

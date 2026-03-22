@@ -1430,6 +1430,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Responsive Sidebar Menu ---
     const sidebar = document.getElementById('sidebar');
     const headerMenuBtn = document.getElementById('header-menu-btn');
+    const sidebarCollapseBtn = document.getElementById('sidebar-collapse-btn');
 
     function toggleSidebar() {
         const backdrop = document.getElementById('sidebar-backdrop');
@@ -1442,11 +1443,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (backdrop) backdrop.classList.remove('show');
             }
         } else {
-            sidebar.classList.toggle('hidden');
+            sidebar.classList.toggle('collapsed');
             sidebar.classList.remove('absolute', 'z-50', 'shadow-2xl');
         }
     }
     headerMenuBtn.addEventListener('click', toggleSidebar);
+    if (sidebarCollapseBtn) sidebarCollapseBtn.addEventListener('click', toggleSidebar);
 
     let touchStartX = 0;
     let touchEndX = 0;
