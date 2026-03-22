@@ -16,6 +16,59 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// =========================================
+// ☁️ CLOUDINARY IMAGE HOSTING CONFIG
+// =========================================
+const CLOUDINARY_CLOUD_NAME = 'dpb7c46v0';
+const CLOUDINARY_UPLOAD_PRESET = 'Nova_uploads';
+const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+async function uploadToCloudinary(base64Data) {
+    try {
+        const formData = new FormData();
+        formData.append('file', base64Data);
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        const res = await fetch(CLOUDINARY_UPLOAD_URL, { method: 'POST', body: formData });
+        if (!res.ok) throw new Error(`Cloudinary upload failed: ${res.status}`);
+        const data = await res.json();
+        return data.secure_url;
+    } catch (err) {
+        console.error('Cloudinary upload error:', err);
+        return null;
+    }
+}
+
+// Replaces all base64 image data in message content/images with Cloudinary URLs
+async function uploadBase64ImagesInContent(content) {
+    const base64Regex = /!\[([^\]]*)\]\((data:image\/[^;]+;base64,[^\)]+)\)/g;
+    let match;
+    let newContent = content;
+    const uploads = [];
+    while ((match = base64Regex.exec(content)) !== null) {
+        uploads.push({ fullMatch: match[0], alt: match[1], base64: match[2] });
+    }
+    for (const item of uploads) {
+        const url = await uploadToCloudinary(item.base64);
+        if (url) {
+            newContent = newContent.replace(item.fullMatch, `![${item.alt}](${url})`);
+        }
+    }
+    return newContent;
+}
+
+async function uploadBase64ImagesArray(images) {
+    const results = [];
+    for (const img of images) {
+        if (img.startsWith('data:image/')) {
+            const url = await uploadToCloudinary(img);
+            results.push(url || img); // Fallback to base64 if upload fails
+        } else {
+            results.push(img); // Already a URL
+        }
+    }
+    return results;
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -271,17 +324,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let messagesToSave = chatToSave.messages;
 
-            // If the chat is too heavy (>0.9 MB), strip the massive Base64 strings from the CLOUD backup
+            // ☁️ CLOUDINARY: Upload base64 images to Cloudinary instead of stripping them
             if (sizeInMB > 0.9) {
-                console.warn(`Chat ${chatToSave.id} is too large for Firestore (${sizeInMB.toFixed(2)} MB). Stripping massive images for cloud sync.`);
-                messagesToSave = chatToSave.messages.map(msg => {
+                console.log(`Chat ${chatToSave.id} is large (${sizeInMB.toFixed(2)} MB). Uploading images to Cloudinary...`);
+                messagesToSave = await Promise.all(chatToSave.messages.map(async (msg) => {
                     let newMsg = { ...msg };
+                    // Upload base64 images embedded in AI content
                     if (newMsg.content) {
-                        // Replace massive Base64 images with a placeholder to save the chat history text safely
-                        newMsg.content = newMsg.content.replace(/!\[.*?\]\((data:image\/[^;]+;base64,[^\)]+)\)/g, "\n*[High-Res Image stored locally on this device]*\n");
+                        newMsg.content = await uploadBase64ImagesInContent(newMsg.content);
+                    }
+                    // Upload base64 user-attached images
+                    if (newMsg.images && newMsg.images.length > 0) {
+                        newMsg.images = await uploadBase64ImagesArray(newMsg.images);
                     }
                     return newMsg;
-                });
+                }));
             }
 
             // Save just the ONE chat
@@ -1879,7 +1936,7 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
             currentStreamingMsgId = null;
         }
 
-        // Save the cleaned content (just the image!) to history
+        // Save the cleaned content to history
         const aiMsg = { role: 'ai', content: cleanContent, timestamp: getTimeString(), personaName: getActivePersona().name };
         addMessageToHistory(aiMsg);
         appendMessageUI(aiMsg, getActiveChat().messages.length - 1);
@@ -1887,6 +1944,26 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
         setSendButtonState((chatInput.value.trim() || currentSelectedImages.length > 0) ? 'ready' : 'disabled');
         scrollToBottom();
         if (headerModelDisplay) headerModelDisplay.textContent = "Writing";
+
+        // ☁️ CLOUDINARY: Async upload any base64 images in the AI response
+        const base64Check = /!\[.*?\]\((data:image\/[^;]+;base64,[^\)]+)\)/;
+        if (base64Check.test(cleanContent)) {
+            (async () => {
+                try {
+                    const chat = getActiveChat();
+                    if (!chat) return;
+                    const msgIdx = chat.messages.length - 1;
+                    const updatedContent = await uploadBase64ImagesInContent(cleanContent);
+                    if (updatedContent !== cleanContent) {
+                        chat.messages[msgIdx].content = updatedContent;
+                        saveHistory();
+                        console.log('☁️ AI image(s) uploaded to Cloudinary and saved.');
+                    }
+                } catch (e) {
+                    console.error('Cloudinary background upload failed:', e);
+                }
+            })();
+        }
     }
 
     // 🔥 THE FIX: Restores the chat history if you cancel an edit
