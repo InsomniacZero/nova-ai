@@ -740,23 +740,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Button Listeners ---
-    uploadFileBtn.addEventListener('click', () => chatFileInput.click());
-
-    chatFileInput.addEventListener('change', (e) => {
-        Array.from(e.target.files).forEach(file => processChatTextFile(file));
-        chatFileInput.value = '';
+    chatFileInput.addEventListener('click', function(e) { e.stopPropagation(); this.value = null; });
+    uploadFileBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        chatFileInput.click();
     });
 
-    uploadImageBtn.addEventListener('click', () => chatImageInput.click());
+    chatFileInput.addEventListener('change', (e) => {
+        if (!e.target.files || e.target.files.length === 0) return;
+        Array.from(e.target.files).forEach(file => processChatTextFile(file));
+    });
+
+    chatImageInput.addEventListener('click', function(e) { e.stopPropagation(); this.value = null; });
+    uploadImageBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        chatImageInput.click();
+    });
 
     chatImageInput.addEventListener('change', (e) => {
+        if (!e.target.files || e.target.files.length === 0) return;
         const availableSlots = 9 - currentSelectedImages.length;
         const filesToProcess = Array.from(e.target.files).slice(0, availableSlots);
         if (e.target.files.length > availableSlots) {
             alert(`Limit reached! Only added ${availableSlots} image(s).`);
         }
         filesToProcess.forEach(file => processChatImageFile(file));
-        chatImageInput.value = '';
     });
 
     // --- Removal Listeners ---
