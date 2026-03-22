@@ -915,9 +915,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.target.closest('#sidebar') && !e.target.closest('.chat-history-item') && !e.target.closest('.chat-options-btn') && !e.target.closest('.rename-chat-btn') && !e.target.closest('.delete-chat-btn')) return;
         if (e.target.closest('#header-menu-btn')) return;
 
-        const copyBtn = e.target.closest('.copy-block-btn') || e.target.closest('.copy-msg-btn');
+        const copyBtn = e.target.closest('.copy-block-btn') || e.target.closest('.copy-msg-btn') || e.target.closest('.copy-user-msg-btn');
         const copyCodeBtn = e.target.closest('.copy-code-btn');
-        const downloadBtn = e.target.closest('.download-msg-btn'); // 🔥 Added this
+        const downloadBtn = e.target.closest('.download-msg-btn');
         const regenBtn = e.target.closest('.regen-btn');
         const editMsgBtn = e.target.closest('.edit-msg-btn');
 
@@ -1514,23 +1514,24 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <span class="text-sm text-gray-300 font-medium">${userFirstName}</span>
                             </div>
                             <!-- Media Floating Above -->
-                            <div class="relative group w-full flex flex-col items-end">
+                            <div class="w-full flex flex-col items-end">
                                 ${imageHtml}
                                 ${filesHtml}
                                 
                                 <!-- Core Text Bubble -->
                                 ${textContent.trim() ? `
-                                <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-white shadow-sm border border-transparent transition-colors relative">
+                                <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-white shadow-sm border border-transparent transition-colors">
                                     ${textContent.replace(/\n/g, '<br>')}
                                 </div>
                                 ` : ''}
 
-                                <div class="msg-options absolute bottom-1 -left-20 flex gap-1 justify-end opacity-0 group-hover:opacity-100 group-[.active-options]:opacity-100 transition-opacity duration-200">
-                                    <button class="copy-msg-btn p-1.5 hover:bg-[#333537]/80 rounded-full text-gray-400 hover:text-gray-200 transition-colors" data-text="${escapedContent}" title="Copy text">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+                                <!-- Inline Action Buttons (always visible, Gemini-style) -->
+                                <div class="flex items-center gap-1 mt-1.5 mr-1">
+                                    <button class="copy-user-msg-btn p-1.5 hover:bg-[#282a2c] rounded-md text-gray-500 hover:text-gray-200 transition-colors" data-text="${escapedContent}" title="Copy message">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                                     </button>
-                                    <button class="edit-msg-btn p-1.5 hover:bg-[#333537]/80 rounded-full text-gray-400 hover:text-gray-200 transition-colors" data-index="${msgIndex}" title="Edit message">
-                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                    <button class="edit-msg-btn p-1.5 hover:bg-[#282a2c] rounded-md text-gray-500 hover:text-blue-400 transition-colors" data-index="${msgIndex}" title="Edit message">
+                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                     </button>
                                 </div>
                             </div>
