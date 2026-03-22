@@ -779,30 +779,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // ==========================================
 
-    uploadImageBtn.addEventListener('click', () => chatImageInput.click());
-
-    chatImageInput.addEventListener('change', (e) => {
-        const availableSlots = 9 - currentSelectedImages.length;
-        const filesToProcess = Array.from(e.target.files).slice(0, availableSlots);
-
-        if (e.target.files.length > availableSlots) {
-            alert(`Limit reached! Only added ${availableSlots} image(s).`);
-        }
-        filesToProcess.forEach(file => processChatImageFile(file));
-        chatImageInput.value = '';
-    });
-
-    imagePreviewContainer.addEventListener('click', (e) => {
-        const removeBtn = e.target.closest('.remove-image-btn');
-        if (removeBtn) {
-            const idx = parseInt(removeBtn.dataset.index);
-            currentSelectedImages.splice(idx, 1);
-            renderImagePreviews();
-            handleInput();
-            updateModelBadge();
-        }
-    });
-
     chatInput.addEventListener('paste', (e) => {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         let imageFound = false;
