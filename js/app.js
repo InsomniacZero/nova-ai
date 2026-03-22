@@ -1657,9 +1657,14 @@ document.addEventListener('DOMContentLoaded', () => {
         setSendButtonState('generating');
         scrollToBottom();
 
-        // 🔥 NEW: Thinking Indicator
-        const thinkingHtml = `<div class="msg-container flex items-start gap-4 transition-opacity duration-300" id="ai-thinking-indicator"><div class="w-8 h-8 shrink-0 mt-1 rounded-full bg-[#1e1f20] border border-[#333537] flex items-center justify-center animate-pulse-ring shadow-[0_0_15px_rgba(59,130,246,0.3)]"><div class="avatar-glow-inner w-full h-full"><svg class="text-white w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 flex items-center h-10"><span class="text-[15px] font-medium text-blue-400/80 animate-pulse tracking-wide">Thinking...</span></div></div>`;
-        chatInner.insertAdjacentHTML('beforeend', thinkingHtml);
+        // Setup the exact UI bubble immediately to prevent layout jumps/flashing
+        currentStreamingMsgId = `stream-${Date.now()}`;
+        const timeStr = getTimeString();
+        const msgIndex = getActiveChat() ? getActiveChat().messages.length : 0;
+        
+        const footerHtml = `<div class="flex items-center gap-2 mt-3 pt-2 text-gray-500"><button class="copy-msg-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-text="" title="Copy response" id="live-copy-${currentStreamingMsgId}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button><button class="regen-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-index="${msgIndex}" title="Regenerate response"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg></button></div>`;
+        const streamHtml = `<div class="msg-container flex items-start gap-4 group transition-opacity duration-300" id="${currentStreamingMsgId}"><div class="w-8 h-8 shrink-0 mt-1 avatar-glow-wrapper" id="avatar-${currentStreamingMsgId}"><div class="avatar-glow-inner flex justify-center items-center h-full w-full rounded-full animate-pulse-ring shadow-[0_0_15px_rgba(59,130,246,0.3)]"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 pr-12 relative z-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-gray-300 font-medium">${getActivePersona().name}</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="markdown-body text-[15px] leading-relaxed text-gray-200" id="content-${currentStreamingMsgId}"><span class="text-blue-400/80 animate-pulse tracking-wide font-medium">Thinking...</span></div><div id="footer-${currentStreamingMsgId}" class="hidden opacity-0 transition-opacity duration-300">${footerHtml}</div></div></div>`;
+        chatInner.insertAdjacentHTML('beforeend', streamHtml);
         scrollToBottom();
 
         const MODEL_TO_USE = hasImageInCurrentInput ? OR_VISION_MODEL : OR_TEXT_MODEL;
@@ -1740,18 +1745,15 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                 throw new Error(errData.error?.message || `HTTP ${response.status}: Failed to fetch response`);
             }
 
-            document.getElementById('ai-thinking-indicator')?.remove();
-            removeTyping();
-
-            currentStreamingMsgId = `stream-${Date.now()}`;
-            const timeStr = getTimeString();
-
-            const footerHtml = `<div class="flex items-center gap-2 mt-3 pt-2 text-gray-500"><button class="copy-msg-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-text="" title="Copy response" id="live-copy-${currentStreamingMsgId}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button><button class="regen-btn flex items-center gap-1.5 p-1.5 hover:bg-[#333537] rounded-md text-gray-400 hover:text-gray-200 transition-colors" data-index="${activeChat.messages.length}" title="Regenerate response"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"></path><polyline points="21 3 21 8 16 8"></polyline></svg></button></div>`;
-            const streamHtml = `<div class="msg-container flex items-start gap-4 group" id="${currentStreamingMsgId}"><div class="w-8 h-8 shrink-0 mt-1 avatar-glow-wrapper"><div class="avatar-glow-inner"><svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z" fill="currentColor"/></svg></div></div><div class="flex-1 min-w-0 pr-12 relative z-0"><div class="flex items-center gap-2 mb-1"><span class="text-sm text-gray-300 font-medium">${activePersona.name}</span><span class="text-xs text-gray-600">${timeStr}</span></div><div class="markdown-body text-[15px] leading-relaxed text-gray-200" id="content-${currentStreamingMsgId}"></div>${footerHtml}</div></div>`;
-            chatInner.insertAdjacentHTML('beforeend', streamHtml);
-
+            // Safely grab the already initialized UI references
             const streamContentBox = document.getElementById(`content-${currentStreamingMsgId}`);
             const liveCopyBtn = document.getElementById(`live-copy-${currentStreamingMsgId}`);
+
+            // Extinguish the avatar pulse animation now that the chunk stream is starting
+            const avatarGlowInner = document.querySelector(`#avatar-${currentStreamingMsgId} .avatar-glow-inner`);
+            if (avatarGlowInner) {
+                avatarGlowInner.classList.remove('animate-pulse-ring', 'shadow-[0_0_15px_rgba(59,130,246,0.3)]');
+            }
 
             if (!response.body) throw new Error("No response body");
 
@@ -1845,6 +1847,14 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                     }
                 }
             }
+            
+            const footerEl = document.getElementById(`footer-${currentStreamingMsgId}`);
+            if (footerEl) {
+                footerEl.classList.remove("hidden");
+                void footerEl.offsetWidth; // Trigger reflow
+                footerEl.classList.remove("opacity-0");
+            }
+            
             completeGeneration(fullText);
 
         } catch (error) {
