@@ -1713,10 +1713,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="flex items-center gap-1.5">
                                 <!-- Action Buttons to the LEFT of the bubble -->
                                 <div class="flex items-center gap-0.5 msg-options">
-                                    <button class="copy-user-msg-btn w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" data-text="${escapedContent}" title="Copy message">
+                                    <button class="copy-user-msg-btn w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-200 hover:bg-[#333537] transition-all" data-text="${escapedContent}" title="Copy message">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                                     </button>
-                                    <button class="edit-msg-btn w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:text-blue-400 hover:bg-[#333537] transition-all" data-index="${msgIndex}" title="Edit message">
+                                    <button class="edit-msg-btn w-9 h-9 flex items-center justify-center rounded-full text-gray-400 hover:text-blue-400 hover:bg-[#333537] transition-all" data-index="${msgIndex}" title="Edit message">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                     </button>
                                 </div>
