@@ -1274,6 +1274,15 @@ document.addEventListener('DOMContentLoaded', () => {
         'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219536/wall_-_4_qflqyz.jpg',
         'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219535/wall_-_3_gdt9ub.jpg',
     ];
+
+    // Preload the images so they appear instantly when the modal opens
+    ANIME_BACKGROUNDS.forEach(url => {
+        if (url && !url.includes('PASTE_IMAGE')) {
+            const img = new Image();
+            img.src = url;
+        }
+    });
+
     let lastBannerIdx = -1;
 
     function setRandomProfileBanner() {
