@@ -1265,6 +1265,32 @@ document.addEventListener('DOMContentLoaded', () => {
     tabPrompt.addEventListener('click', () => switchTab('prompt'));
 
     let tempProfileImage = null;
+    // ── Paste your 5 anime image URLs here ──
+    // They must be direct image links (ending in .jpg, .png, .webp etc. OR a CDN URL)
+    const ANIME_BACKGROUNDS = [
+        'PASTE_IMAGE_URL_1_HERE',
+        'PASTE_IMAGE_URL_2_HERE',
+        'PASTE_IMAGE_URL_3_HERE',
+        'PASTE_IMAGE_URL_4_HERE',
+        'PASTE_IMAGE_URL_5_HERE',
+    ];
+    let lastBannerIdx = -1;
+
+    function setRandomProfileBanner() {
+        const banner = document.querySelector('.profile-banner-anim');
+        if (!banner) return;
+        // Pick a different one each time
+        let idx;
+        do { idx = Math.floor(Math.random() * ANIME_BACKGROUNDS.length); } while (idx === lastBannerIdx && ANIME_BACKGROUNDS.length > 1);
+        lastBannerIdx = idx;
+        const url = ANIME_BACKGROUNDS[idx];
+        if (url && !url.includes('PASTE_IMAGE')) {
+            banner.style.backgroundImage = `url('${url}')`;
+            banner.style.backgroundSize = 'cover';
+            banner.style.backgroundPosition = 'center';
+            banner.style.animation = 'none'; // disable the CSS keyframe
+        }
+    }
 
     userProfileBtn.addEventListener('click', () => {
         profileNameInput.value = userProfile.name;
@@ -1274,6 +1300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailEl && currentUser) emailEl.textContent = currentUser.email || '';
         const namePreview = document.getElementById('profile-display-name-preview');
         if (namePreview) namePreview.textContent = userProfile.name || 'User';
+        setRandomProfileBanner();
         updateProfilePreview();
         openModal(profileModal, profileModalContent);
     });
