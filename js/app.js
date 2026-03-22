@@ -324,21 +324,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let messagesToSave = chatToSave.messages;
 
-            // ☁️ CLOUDINARY: Upload base64 images to Cloudinary instead of stripping them
+            // ☁️ CLOUDINARY: Upload base64 images to Cloudinary, with fallback stripping
             if (sizeInMB > 0.9) {
                 console.log(`Chat ${chatToSave.id} is large (${sizeInMB.toFixed(2)} MB). Uploading images to Cloudinary...`);
                 messagesToSave = await Promise.all(chatToSave.messages.map(async (msg) => {
                     let newMsg = { ...msg };
                     // Upload base64 images embedded in AI content
                     if (newMsg.content) {
-                        newMsg.content = await uploadBase64ImagesInContent(newMsg.content);
+                        try {
+                            newMsg.content = await uploadBase64ImagesInContent(newMsg.content);
+                        } catch (e) {
+                            console.warn('Cloudinary content upload failed, stripping base64:', e);
+                        }
+                        // FALLBACK: If any base64 still remains (upload failed), strip it so Firestore doesn't reject
+                        newMsg.content = newMsg.content.replace(/!\[.*?\]\((data:image\/[^;]+;base64,[^\)]+)\)/g, "\n*[Image uploaded to cloud]*\n");
                     }
                     // Upload base64 user-attached images
                     if (newMsg.images && newMsg.images.length > 0) {
-                        newMsg.images = await uploadBase64ImagesArray(newMsg.images);
+                        try {
+                            newMsg.images = await uploadBase64ImagesArray(newMsg.images);
+                        } catch (e) {
+                            console.warn('Cloudinary image array upload failed, filtering base64:', e);
+                        }
+                        // FALLBACK: Strip any remaining base64 images that failed to upload
+                        newMsg.images = newMsg.images.filter(img => !img.startsWith('data:image/'));
                     }
                     return newMsg;
                 }));
+
+                // Final size safety check
+                const finalSize = JSON.stringify(messagesToSave).length / (1024 * 1024);
+                if (finalSize > 0.95) {
+                    console.warn(`Chat still too large after Cloudinary (${finalSize.toFixed(2)} MB). Force-stripping remaining base64.`);
+                    messagesToSave = messagesToSave.map(msg => {
+                        let m = { ...msg };
+                        if (m.content) m.content = m.content.replace(/!\[.*?\]\((data:image\/[^;]+;base64,[^\)]+)\)/g, "\n*[Image too large to sync]*\n");
+                        if (m.images) m.images = m.images.filter(img => !img.startsWith('data:image/'));
+                        return m;
+                    });
+                }
             }
 
             // Save just the ONE chat
