@@ -590,8 +590,31 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
                 closeModal(createPersonaModal, createPersonaContent);
             });
 
-            // Settings Variables (API keys stay local to device for security)
-            let OR_API_KEY = localStorage.getItem('or_api_key') || '';
+            // --- OPENROUTER API POOL ---
+            const OPENROUTER_KEYS = [
+                "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",
+                "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",
+                "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",
+                "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",
+                "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",
+                "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"
+            ];
+            let currentKeyIndex = 0;
+
+            function getActiveApiKey() {
+                return OPENROUTER_KEYS[currentKeyIndex];
+            }
+
+            function rotateApiKey() {
+                currentKeyIndex++;
+                if (currentKeyIndex >= OPENROUTER_KEYS.length) {
+                    currentKeyIndex = 0; 
+                    return false;
+                }
+                return true;
+            }
+
+            // Settings Variables
             let OR_TEXT_MODEL = localStorage.getItem('or_text_model') || 'x-ai/grok-4-fast';
             let OR_VISION_MODEL = localStorage.getItem('or_vision_model') || 'x-ai/grok-4-fast';
 
@@ -603,7 +626,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
             let currentAbortController = null;
             let currentSelectedImages = []; // 🔥 RESTORED: This prevents the app from freezing!
 
-            apiKeyInput.value = OR_API_KEY;
             apiTextModelInput.value = OR_TEXT_MODEL;
             apiVisionModelInput.value = OR_VISION_MODEL;
 
@@ -1156,14 +1178,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
             document.getElementById('close-settings-btn').addEventListener('click', () => closeModal(settingsModal, settingsModalContent));
             document.getElementById('cancel-settings-btn').addEventListener('click', () => closeModal(settingsModal, settingsModalContent));
             document.getElementById('save-settings-btn').addEventListener('click', () => {
-                OR_API_KEY = apiKeyInput.value.trim();
                 OR_TEXT_MODEL = apiTextModelInput.value.trim() || 'x-ai/grok-4-fast';
                 OR_VISION_MODEL = apiVisionModelInput.value.trim() || 'x-ai/grok-4-fast';
 
                 const active = getActivePersona();
                 active.prompt = systemPromptInput.value.trim() || '';
 
-                localStorage.setItem('or_api_key', OR_API_KEY);
                 localStorage.setItem('or_text_model', OR_TEXT_MODEL);
                 localStorage.setItem('or_vision_model', OR_VISION_MODEL);
 
@@ -1632,12 +1652,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/fireba
                 // Allow sending if there is text, OR an image, OR a file
                 if (!text && imagesToUse.length === 0 && currentSelectedFiles.length === 0) return;
 
-                if (!OR_API_KEY) {
-                    openModal(settingsModal, settingsModalContent);
-                    appendMessageUI({ role: 'ai', status: 'error', content: "Please enter your OpenRouter API key in settings to continue.", timestamp: getTimeString(), personaName: getActivePersona().name }, 0);
-                    return;
-                }
-
                 const hasImageInCurrentInput = imagesToUse.length > 0;
 
                 if (!isRegen) {
@@ -1732,7 +1746,7 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                     const response = await fetch(`${PYTHON_SERVER_URL}/api/chat`, {
                         method: "POST",
                         headers: {
-                            "Authorization": `Bearer ${OR_API_KEY}`,
+                            "Authorization": `Bearer ${getActiveApiKey()}`,
                             "HTTP-Referer": window.location.href,
                             "X-Title": "Nova UI",
                             "Content-Type": "application/json"
@@ -1782,6 +1796,23 @@ CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend aut
                                 try {
                                     const data = JSON.parse(rawJsonBuffer);
                                     if (data.error) {
+                                        // AUTO-ROTATE LOGIC
+                                        const errMsg = (data.error.message || "").toLowerCase();
+                                        if (data.error.code === 402 || data.error.code === 401 || errMsg.includes("credit") || errMsg.includes("balance") || errMsg.includes("key") || errMsg.includes("auth")) {
+                                            console.warn("API key exhausted/failed. Rotating key...");
+                                            const rotated = rotateApiKey();
+                                            if (rotated) {
+                                                document.getElementById('ai-thinking-indicator')?.remove();
+                                                if (currentStreamingMsgId) document.getElementById(currentStreamingMsgId)?.remove();
+                                                
+                                                // Avoid infinite recursion by setting a tiny timeout
+                                                setTimeout(() => {
+                                                    startMessageFlow(isRegen ? text : chatInput.value.trim(), imagesToUse, filesToUse);
+                                                }, 200);
+                                                return; 
+                                            }
+                                        }
+
                                         if (!document.getElementById(currentStreamingMsgId)) {
                                             appendMessageUI({ role: 'ai', content: '', timestamp: getTimeString(), personaName: getActivePersona().name }, getActiveChat().messages.length, currentStreamingMsgId);
                                         }
