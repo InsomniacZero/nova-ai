@@ -926,6 +926,14 @@ document.addEventListener('DOMContentLoaded', () => {
     chatInner.addEventListener('touchcancel', () => {
         if (longPressTimer) clearTimeout(longPressTimer);
     });
+    
+    // Prevent custom hold menu if user is actively native-selecting text
+    document.addEventListener('selectionchange', () => {
+        if (longPressTimer && window.getSelection().toString().length > 0) {
+            clearTimeout(longPressTimer);
+            longPressTimer = null;
+        }
+    });
 
     // If you tap anywhere else on the screen, close the open edit menus
     document.addEventListener('touchstart', (e) => {
@@ -1704,7 +1712,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <!-- Buttons-left + Bubble-right row (Gemini style) -->
                             <div class="flex items-center gap-1.5">
                                 <!-- Action Buttons to the LEFT of the bubble -->
-                                <div class="flex items-center gap-0.5">
+                                <div class="flex items-center gap-0.5 msg-options">
                                     <button class="copy-user-msg-btn w-9 h-9 flex items-center justify-center rounded-full text-gray-500 hover:text-gray-200 hover:bg-[#333537] transition-all" data-text="${escapedContent}" title="Copy message">
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
                                     </button>
