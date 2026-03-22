@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js";
 import { getFirestore, doc, setDoc, getDoc, getDocs, deleteDoc, collection } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, setPersistence, browserLocalPersistence, browserSessionPersistence, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCSREyC2tFjLLXBvhbI_LkxEIhezO9vErs",
@@ -1279,6 +1279,79 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     document.getElementById('close-profile-btn').addEventListener('click', () => closeModal(profileModal, profileModalContent));
     document.getElementById('cancel-profile-btn').addEventListener('click', () => closeModal(profileModal, profileModalContent));
+
+    // ── Click outside to close ──
+    profileModal.addEventListener('click', (e) => {
+        if (e.target === profileModal) closeModal(profileModal, profileModalContent);
+    });
+
+    // ── Escape key to close ──
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !profileModal.classList.contains('hidden')) {
+            closeModal(profileModal, profileModalContent);
+        }
+    });
+
+    // ── Password accordion toggle ──
+    document.getElementById('toggle-password-section')?.addEventListener('click', () => {
+        const section = document.getElementById('password-section');
+        const chevron = document.getElementById('pw-chevron');
+        const isHidden = section.classList.contains('hidden');
+        section.classList.toggle('hidden', !isHidden);
+        chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+        if (isHidden) {
+            // Clear fields when opening
+            ['current-password-input', 'new-password-input', 'confirm-password-input'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+            const statusEl = document.getElementById('password-status');
+            if (statusEl) { statusEl.classList.add('hidden'); statusEl.textContent = ''; }
+        }
+    });
+
+    // ── Change password with Firebase reauthentication ──
+    document.getElementById('update-password-btn')?.addEventListener('click', async () => {
+        const currentPw = document.getElementById('current-password-input')?.value;
+        const newPw = document.getElementById('new-password-input')?.value;
+        const confirmPw = document.getElementById('confirm-password-input')?.value;
+        const statusEl = document.getElementById('password-status');
+        const btn = document.getElementById('update-password-btn');
+
+        function showStatus(msg, isError) {
+            statusEl.textContent = msg;
+            statusEl.className = `text-xs ${isError ? 'text-red-400' : 'text-green-400'}`;
+            statusEl.classList.remove('hidden');
+        }
+
+        if (!currentPw || !newPw || !confirmPw) return showStatus('Please fill in all fields.', true);
+        if (newPw.length < 6) return showStatus('New password must be at least 6 characters.', true);
+        if (newPw !== confirmPw) return showStatus('New passwords do not match.', true);
+        if (newPw === currentPw) return showStatus('New password must be different from current.', true);
+
+        btn.textContent = 'Updating...';
+        btn.disabled = true;
+
+        try {
+            const credential = EmailAuthProvider.credential(currentUser.email, currentPw);
+            await reauthenticateWithCredential(currentUser, credential);
+            await updatePassword(currentUser, newPw);
+            showStatus('✓ Password updated successfully!', false);
+            // Clear fields after success
+            ['current-password-input', 'new-password-input', 'confirm-password-input'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.value = '';
+            });
+        } catch (err) {
+            const msg = err.code === 'auth/wrong-password' ? 'Current password is incorrect.'
+                : err.code === 'auth/too-many-requests' ? 'Too many attempts. Try again later.'
+                : 'Failed to update password. Try again.';
+            showStatus(msg, true);
+        } finally {
+            btn.textContent = 'Update Password';
+            btn.disabled = false;
+        }
+    });
 
     profileImageInput.addEventListener('change', function (e) {
         const file = e.target.files[0];
