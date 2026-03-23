@@ -13,8 +13,8 @@ let tempProfileImage = null;
 
 const ANIME_BACKGROUNDS = [
     'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219540/wall_-_2_siefa6.jpg',
-    'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219538/wall_-_1_b4jgab.jpg',
-    'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219537/wall_-_5_fy8da6.jpg',
+    'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774240388/wall_-_7_qpz2kb.jpg',
+    'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774240388/wall_-_6_bckyif.jpg',
     'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219536/wall_-_4_qflqyz.jpg',
     'https://res.cloudinary.com/dpb7c46v0/image/upload/v1774219535/wall_-_3_gdt9ub.jpg',
 ];
@@ -183,12 +183,12 @@ export function initProfile() {
         saveProfileToCloud(state.userProfile);
         updateProfileUI();
         emit('renderChatHistory');
-        
+
         const btnText = saveProfileBtn.querySelector('.btn-text');
         btnText.innerHTML = '<div class="flex items-center justify-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Saved</span></div>';
         saveProfileBtn.classList.remove('bg-[#4285f4]', 'hover:bg-[#5a95f5]');
         saveProfileBtn.classList.add('bg-green-500', 'hover:bg-green-400');
-        
+
         setTimeout(() => {
             btnText.textContent = 'Save';
             saveProfileBtn.classList.add('bg-[#4285f4]', 'hover:bg-[#5a95f5]');
