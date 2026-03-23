@@ -8,7 +8,6 @@
             -webkit-user-select: none;
             user-select: none;
             font-family: 'Outfit', sans-serif;
-            background-color: #000000;
         }
 
         /* Re-enable text selection ONLY for the chat messages and inputs */
@@ -39,12 +38,18 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #333537;
+            background: #d1d5db; /* Light mode */
             border-radius: 4px;
+        }
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #333537; /* Dark mode */
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #444749;
+            background: #9ca3af; /* Light mode */
+        }
+        html.dark ::-webkit-scrollbar-thumb:hover {
+            background: #444749; /* Dark mode */
         }
 
         #image-preview-list::-webkit-scrollbar {
@@ -57,16 +62,25 @@
         }
 
         #image-preview-list::-webkit-scrollbar-thumb {
-            background: #444749;
+            background: #d1d5db;
             border-radius: 10px;
+        }
+        html.dark #image-preview-list::-webkit-scrollbar-thumb {
+            background: #444749;
         }
 
         #image-preview-list::-webkit-scrollbar-thumb:hover {
+            background: #60a5fa;
+        }
+        html.dark #image-preview-list::-webkit-scrollbar-thumb:hover {
             background: #5aa1ff;
         }
 
         #image-preview-list {
             scrollbar-width: thin;
+            scrollbar-color: #d1d5db transparent;
+        }
+        html.dark #image-preview-list {
             scrollbar-color: #444749 transparent;
         }
 
