@@ -53,7 +53,10 @@
             backdrop-filter: blur(24px); 
             -webkit-backdrop-filter: blur(24px); 
             will-change: backdrop-filter; 
-            background-color: rgba(30, 31, 32, 0.75); 
+            background-color: rgba(255, 255, 255, 0.75); /* Light mode glass */
+        }
+        html.dark .glass-panel {
+            background-color: rgba(30, 31, 32, 0.75); /* Dark mode glass */
         }
         /* ── Profile banner anime scenery cycling animation ── */
         @keyframes animeBanner {
@@ -363,7 +366,7 @@
             </div>
         </div>
 
-        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-gray-300 dark:border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#000000] via-[#000000]/90 to-transparent">
+        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-gray-300 dark:border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-white dark:from-[#000000] via-white dark:via-[#000000]/90 to-transparent">
             <div class="w-full max-w-2xl">
 
                 <div class="max-w-4xl mx-auto w-full relative pointer-events-auto">
@@ -528,12 +531,12 @@
                         <div class="space-y-1.5">
                             <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-500">Text Model (Default)</label>
                             <input type="text" id="api-text-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-500">Vision Model (Images)</label>
                             <input type="text" id="api-vision-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                     </div>
                 </div>
@@ -635,7 +638,7 @@
                     <div class="p-4 border-b border-gray-300 dark:border-[#2d2e30]">
                         <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-[#8e9092] mb-2">Display Name</label>
                         <input type="text" id="profile-name-input" value="User"
-                            class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[15px] placeholder-gray-600 shadow-inner"
+                            class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[15px] placeholder-gray-600 shadow-inner"
                             placeholder="Enter your display name"
                             oninput="document.getElementById('profile-display-name-preview').textContent = this.value || 'User'">
                     </div>
@@ -662,13 +665,13 @@
                             <div class="px-4 pb-4 space-y-3 pt-1 border-t border-gray-300 dark:border-[#2d2e30]">
                                 <p class="text-[13px] text-gray-500 dark:text-gray-500 font-medium pb-1">Enter your current password to set a new one.</p>
                                 <input type="password" id="current-password-input"
-                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="Current password">
                                 <input type="password" id="new-password-input"
-                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="New password (min. 6 chars)">
                                 <input type="password" id="confirm-password-input"
-                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-900 dark:text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="Confirm new password">
                                 <div id="password-status" class="text-xs hidden font-medium pt-1"></div>
                                 <button id="update-password-btn"
