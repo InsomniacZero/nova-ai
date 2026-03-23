@@ -89,6 +89,13 @@ export function initProfile() {
         if (namePreview) namePreview.textContent = state.userProfile.name || 'User';
         setRandomProfileBanner();
         updateProfilePreview();
+
+        // Reset password accordion on open
+        const wrapper = document.getElementById('password-section-wrapper');
+        const chevron = document.getElementById('pw-chevron');
+        if (wrapper) wrapper.style.gridTemplateRows = '0fr';
+        if (chevron) chevron.style.transform = 'rotate(0deg)';
+
         openModal(profileModal, profileModalContent);
     });
 
@@ -101,12 +108,12 @@ export function initProfile() {
 
     // Password accordion
     document.getElementById('toggle-password-section')?.addEventListener('click', () => {
-        const section = document.getElementById('password-section');
+        const wrapper = document.getElementById('password-section-wrapper');
         const chevron = document.getElementById('pw-chevron');
-        const isHidden = section.classList.contains('hidden');
-        section.classList.toggle('hidden', !isHidden);
+        const isHidden = wrapper.style.gridTemplateRows !== '1fr';
+        wrapper.style.gridTemplateRows = isHidden ? '1fr' : '0fr';
         chevron.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
-        if (isHidden) {
+        if (!isHidden) {
             ['current-password-input', 'new-password-input', 'confirm-password-input'].forEach(id => {
                 const el = document.getElementById(id); if (el) el.value = '';
             });
@@ -122,10 +129,11 @@ export function initProfile() {
         const confirmPw = document.getElementById('confirm-password-input')?.value;
         const statusEl = document.getElementById('password-status');
         const btn = document.getElementById('update-password-btn');
+        const btnText = btn.querySelector('.btn-text');
 
         function showStatus(msg, isError) {
             statusEl.textContent = msg;
-            statusEl.className = `text-xs ${isError ? 'text-red-400' : 'text-green-400'}`;
+            statusEl.className = `text-xs ${isError ? 'text-red-400' : 'text-green-400'} font-medium pt-1`;
             statusEl.classList.remove('hidden');
         }
 
@@ -134,7 +142,7 @@ export function initProfile() {
         if (newPw !== confirmPw) return showStatus('New passwords do not match.', true);
         if (newPw === currentPw) return showStatus('New password must be different from current.', true);
 
-        btn.textContent = 'Updating...';
+        btnText.textContent = 'Updating...';
         btn.disabled = true;
         try {
             const credential = EmailAuthProvider.credential(state.currentUser.email, currentPw);
@@ -150,7 +158,7 @@ export function initProfile() {
                     : 'Failed to update password. Try again.';
             showStatus(msg, true);
         } finally {
-            btn.textContent = 'Update Password';
+            btnText.textContent = 'Update Password';
             btn.disabled = false;
         }
     });
@@ -167,13 +175,25 @@ export function initProfile() {
 
     profileNameInput.addEventListener('input', updateProfilePreview);
 
-    // Save profile
-    document.getElementById('save-profile-btn').addEventListener('click', () => {
+    // Save profile with checkmark animation
+    const saveProfileBtn = document.getElementById('save-profile-btn');
+    saveProfileBtn.addEventListener('click', () => {
         state.userProfile.name = profileNameInput.value.trim() || 'User';
         state.userProfile.avatar = tempProfileImage;
         saveProfileToCloud(state.userProfile);
         updateProfileUI();
         emit('renderChatHistory');
-        closeModal(profileModal, profileModalContent);
+        
+        const btnText = saveProfileBtn.querySelector('.btn-text');
+        btnText.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Saved';
+        saveProfileBtn.classList.remove('bg-[#4285f4]', 'hover:bg-[#5a95f5]');
+        saveProfileBtn.classList.add('bg-green-500', 'hover:bg-green-400');
+        
+        setTimeout(() => {
+            btnText.textContent = 'Save';
+            saveProfileBtn.classList.add('bg-[#4285f4]', 'hover:bg-[#5a95f5]');
+            saveProfileBtn.classList.remove('bg-green-500', 'hover:bg-green-400');
+            closeModal(profileModal, profileModalContent);
+        }, 800);
     });
 }
