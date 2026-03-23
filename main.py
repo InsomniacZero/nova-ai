@@ -64,7 +64,45 @@ async def handle_image_task(prompt: str, image_b64: str):
     # ==========================================
     # TOOL 1: BACKGROUND REMOVAL (Local)
     # ==========================================
-    if "remove" in prompt.lower() and "background" in prompt.lower():
+    def wants_bg_removal(text: str) -> bool:
+        """Detect if the user wants background removal using safe keyword combos."""
+        t = text.lower()
+        # Normalize abbreviations
+        # Use word-boundary-safe replacements so "bg" doesn't match inside other words
+        import re
+        # Replace standalone "bg" with "background"
+        t = re.sub(r'\bbg\b', 'background', t)
+        
+        # --- Direct phrases (very high confidence, no false positives) ---
+        direct_phrases = [
+            "remove background", "remove the background", "remove its background",
+            "delete background", "delete the background",
+            "erase background", "erase the background",
+            "strip background", "strip the background",
+            "cut out", "cutout",
+            "no background", "without background", "without the background",
+            "transparent background", "make transparent", "make it transparent",
+            "isolate subject", "isolate the subject",
+            "get rid of the background", "get rid of background",
+            "take off the background", "take off background",
+            "remove backdrop", "delete backdrop", "erase backdrop",
+        ]
+        if any(phrase in t for phrase in direct_phrases):
+            return True
+        
+        # --- Action + Target combo (need BOTH to match) ---
+        # These action words are specific enough to not trigger on normal chat
+        actions = ["remove", "delete", "erase", "strip", "eliminate", "drop"]
+        targets = ["background", "backdrop"]
+        
+        for action in actions:
+            for target in targets:
+                if action in t and target in t:
+                    return True
+        
+        return False
+
+    if wants_bg_removal(prompt):
         try:
             prompt_lower = prompt.lower()
             if any(word in prompt_lower for word in ["anime", "art", "game", "drawn", "2d", "manga"]):
