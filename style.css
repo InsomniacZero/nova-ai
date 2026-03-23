@@ -408,12 +408,11 @@
                 padding-right: 0 !important;
             }
             #sidebar.collapsed #new-chat-btn {
-                border-radius: 9999px;
-                background-color: rgba(59, 130, 246, 0.08) !important;
-                border-color: rgba(59, 130, 246, 0.3) !important;
+                background-color: transparent !important;
+                border-color: transparent !important;
             }
             #sidebar.collapsed #new-chat-btn:hover {
-                background-color: rgba(59, 130, 246, 0.15) !important;
+                background-color: rgba(255, 255, 255, 0.05) !important;
             }
         }
 
