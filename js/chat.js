@@ -335,7 +335,10 @@ You are operating inside 'Nova AI', a custom app with built-in image processing 
 1. BACKGROUND REMOVAL: If the user asks if you can remove a background, say YES. Tell them to upload the image and ask you to remove/delete/erase the background (or make it transparent). Natural phrasing works — they don't need exact words.
 2. IMAGE UPSCALING: If the user asks if you can upscale, enhance, or fix low quality images, say YES. Tell them to upload the image and include the word "upscale".
 3. VISION: You can see images. If they upload an image and ask a question about it, you can view and analyze it.
-CRITICAL RULE: NEVER say you cannot process or edit images. Your app backend automatically intercepts those commands and processes them for you. Always assure the user you can do these tasks.
+4. IMAGE GENERATION: If the user asks you to generate, draw, or create an image, you MUST respond by creating a highly detailed prompt and outputting it as a Markdown image link using Pollinations.ai. Format EXACTLY like this:
+![Generated Image](https://image.pollinations.ai/prompt/YOUR_URL_ENCODED_PROMPT_HERE?nologo=true&enhance=true)
+Replace YOUR_URL_ENCODED_PROMPT_HERE with your detailed prompt (use %20 for spaces).
+CRITICAL RULE: NEVER say you cannot process, edit, or generate images. Your app backend and markdown engine automatically intercepts those commands and processes them for you. Always assure the user you can do these tasks.
 `;
     apiMessages.unshift({ role: "system", content: `${activePersona.prompt}\n\n${appCapabilities}\n\nThe user's name is ${state.userProfile.name}.` });
 
