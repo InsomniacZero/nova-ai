@@ -89,8 +89,8 @@ export function parseAIContent(text) {
     if (thinkCount > endThinkCount) formattedText += '</div></details></div>';
 
     let sanitizedHtml = DOMPurify.sanitize(marked.parse(formattedText), {
-        ADD_TAGS: ['details', 'summary', 'button', 'svg', 'path', 'rect', 'polyline', 'line', 'circle'],
-        ADD_ATTR: ['class', 'open', 'data-text', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'title', 'style']
+        ADD_TAGS: ['details', 'summary', 'button', 'svg', 'path', 'rect', 'polyline', 'line', 'circle', 'img'],
+        ADD_ATTR: ['class', 'open', 'data-text', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'title', 'style', 'src', 'alt', 'loading', 'decoding']
     });
 
     extractedImages.forEach((base64Data, index) => {
