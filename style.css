@@ -25,6 +25,15 @@
             width: 8px;
         }
 
+        #sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        #sidebar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         ::-webkit-scrollbar-track {
             background: transparent;
         }
