@@ -53,7 +53,7 @@
             backdrop-filter: blur(24px); 
             -webkit-backdrop-filter: blur(24px); 
             will-change: backdrop-filter; 
-            background-color: rgba(255, 255, 255, 0.75); /* Light mode glass */
+            background-color: rgba(220, 220, 220, 0.85); /* #dcdcdc translucent */
         }
         html.dark .glass-panel {
             background-color: rgba(30, 31, 32, 0.75); /* Dark mode glass */
@@ -75,7 +75,7 @@
     <link rel="icon" type="image/png" href="Nova.png">
 </head>
 
-<body class="text-gray-800 dark:text-gray-200 bg-white dark:bg-[#000000] flex overflow-x-hidden">
+<body class="text-gray-800 dark:text-gray-200 bg-[#f0f0f0] dark:bg-[#000000] flex overflow-x-hidden">
 
     <!-- Toast Container -->
     <div id="toast-container"
@@ -207,7 +207,7 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full bg-white dark:bg-[#000000] relative overflow-hidden transition-all duration-300">
+    <main class="flex-1 flex flex-col h-full bg-[#f0f0f0] dark:bg-[#000000] relative overflow-hidden transition-all duration-300">
         <header
             class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-white dark:bg-[#000000] transition-colors">
 
@@ -366,7 +366,7 @@
             </div>
         </div>
 
-        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-gray-300 dark:border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-white dark:from-[#000000] via-white dark:via-[#000000]/90 to-white/0 dark:to-[#000000]/0">
+        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-gray-300 dark:border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#f0f0f0] dark:from-[#000000] via-[#f0f0f0] dark:via-[#000000]/90 to-[#f0f0f0]/0 dark:to-[#000000]/0">
             <div class="w-full max-w-2xl">
 
                 <div class="max-w-4xl mx-auto w-full relative pointer-events-auto">
