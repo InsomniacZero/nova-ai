@@ -15,6 +15,7 @@ load_dotenv()
 
 # --- CONFIGURATION ---
 STABILITY_API_KEY = os.environ.get("STABILITY_API_KEY", "sk-3vqIeLFsnCliF7KtyxEwQtm1TLqxlVvSrkdtpdpnEnoO2pfL")
+HF_API_KEY = os.environ.get("HUGGINGFACE_API_KEY", "")
 
 OPENROUTER_KEYS = [k.strip() for k in os.environ.get("OPENROUTER_KEYS", "").split(",") if k.strip()]
 current_key_index = 0
@@ -39,6 +40,30 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from fastapi.responses import Response
+
+@app.get("/api/generate-image")
+async def generate_image_route(prompt: str):
+    print(f"🎨 Generating image via Hugging Face API for: {prompt}")
+    if not HF_API_KEY:
+        print("❌ Missing HF_API_KEY in .env!")
+        return Response(content=b"", status_code=500)
+        
+    url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+    headers = {"Authorization": f"Bearer {HF_API_KEY}"}
+    payload = {"inputs": prompt}
+    
+    async with httpx.AsyncClient(timeout=45.0) as client:
+        try:
+            response = await client.post(url, headers=headers, json=payload)
+            response.raise_for_status()
+            return Response(content=response.content, media_type="image/jpeg")
+        except Exception as e:
+            print(f"❌ HF API Error: {str(e)}")
+            if isinstance(e, httpx.HTTPStatusError):
+                print(f"API Response: {e.response.text}")
+            return Response(content=b"", status_code=500)
 
 # --- THE ADAPTIVE BRAIN (Local Background Remover) ---
 print("Loading AI Models into memory... (This takes a few seconds on startup)")
