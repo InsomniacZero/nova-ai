@@ -50,7 +50,7 @@
     <link rel="icon" type="image/png" href="Nova.png">
 </head>
 
-<body class="text-gray-200 bg-[#131314] flex overflow-x-hidden">
+<body class="text-gray-200 bg-[#000000] flex overflow-x-hidden">
 
     <!-- Toast Container -->
     <div id="toast-container"
@@ -58,7 +58,7 @@
 
     <!-- Auth Overlay -->
     <div id="auth-overlay"
-        class="fixed inset-0 z-[9999] bg-[#131314] flex flex-col items-center justify-center transition-opacity duration-500">
+        class="fixed inset-0 z-[9999] bg-[#000000] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="text-center mb-8 transform transition-transform duration-700 hover:scale-[1.01]">
             <div class="w-24 h-24 mx-auto mb-6 avatar-glow-wrapper">
                 <div class="avatar-glow-inner">
@@ -82,7 +82,7 @@
                 <div class="flex items-center justify-start w-full px-1 mb-2">
                     <label class="flex items-center gap-2 cursor-pointer group">
                         <input type="checkbox" id="remember-me-checkbox"
-                            class="w-4 h-4 rounded border-[#333537] bg-[#131314] text-blue-600 focus:ring-blue-500/50 focus:ring-offset-0 transition-all cursor-pointer accent-blue-600"
+                            class="w-4 h-4 rounded border-[#333537] bg-[#000000] text-blue-600 focus:ring-blue-500/50 focus:ring-offset-0 transition-all cursor-pointer accent-blue-600"
                             checked>
                         <span class="text-sm text-gray-400 group-hover:text-gray-200 transition-colors">Remember
                             me</span>
@@ -170,9 +170,9 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full bg-[#131314] relative overflow-hidden transition-all duration-300">
+    <main class="flex-1 flex flex-col h-full bg-[#000000] relative overflow-hidden transition-all duration-300">
         <header
-            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-[#131314] transition-colors">
+            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-[#000000] transition-colors">
 
             <div id="header-chat-title"
                 class="absolute left-1/2 transform -translate-x-1/2 text-[15px] font-medium text-gray-300 truncate w-[45%] text-center pointer-events-none hidden sm:block">
@@ -314,7 +314,7 @@
         </div>
 
         <!-- ======= IMAGE LIGHTBOX ======= -->
-        <div id="image-lightbox" class="fixed inset-0 z-[200] hidden flex-col bg-[#131314]/95 backdrop-blur-sm" role="dialog">
+        <div id="image-lightbox" class="fixed inset-0 z-[200] hidden flex-col bg-[#000000]/95 backdrop-blur-sm" role="dialog">
             <div class="flex items-center gap-4 px-4 py-3 shrink-0">
                 <button id="lightbox-close-btn" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-300 hover:bg-[#333537] transition-colors">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -329,7 +329,7 @@
             </div>
         </div>
 
-        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#131314] via-[#131314]/90 to-transparent">
+        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#000000] via-[#000000]/90 to-transparent">
             <div class="w-full max-w-2xl">
 
                 <div class="max-w-4xl mx-auto w-full relative pointer-events-auto">
@@ -443,7 +443,7 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-400 mb-1.5">Character/Persona Name</label>
                     <input type="text" id="new-persona-name"
-                        class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                        class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                         placeholder="e.g. Sukuna">
                 </div>
 
@@ -451,7 +451,7 @@
                     <label class="block text-sm font-medium text-gray-400 mb-1.5">System Prompt (Personality &
                         Rules)</label>
                     <textarea id="new-persona-prompt" rows="8"
-                        class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-[14px] text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none placeholder-gray-600"
+                        class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-[14px] text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none placeholder-gray-600"
                         placeholder="[Character: Name]\n[Personality: ...]\n[Instructions: ...]"></textarea>
                 </div>
             </div>
@@ -494,12 +494,12 @@
                         <div class="space-y-1.5">
                             <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Text Model (Default)</label>
                             <input type="text" id="api-text-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Vision Model (Images)</label>
                             <input type="text" id="api-vision-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                     </div>
                 </div>
@@ -513,7 +513,7 @@
                             <span>System Prompt for <span id="settings-persona-name-label" class="text-blue-400 font-bold ml-1">Nova</span></span>
                         </label>
                         <textarea id="system-prompt-input" rows="8"
-                            class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all resize-none placeholder-gray-600 leading-relaxed font-medium"
+                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all resize-none placeholder-gray-600 leading-relaxed font-medium"
                             placeholder="Define personality here..."></textarea>
                     </div>
                 </div>
@@ -555,7 +555,7 @@
                 <div class="absolute -bottom-10 left-6">
                     <div class="relative group cursor-pointer">
                         <div id="profile-avatar-preview"
-                            class="w-20 h-20 rounded-full bg-[#131314] border-4 border-[#1e1f20] flex items-center justify-center text-2xl font-bold text-white bg-cover bg-center overflow-hidden shadow-xl ring-2 ring-white/10">
+                            class="w-20 h-20 rounded-full bg-[#000000] border-4 border-[#1e1f20] flex items-center justify-center text-2xl font-bold text-white bg-cover bg-center overflow-hidden shadow-xl ring-2 ring-white/10">
                             <span id="profile-avatar-preview-text">U</span>
                         </div>
                         <label
@@ -588,7 +588,7 @@
                 <div class="space-y-1.5 mb-5">
                     <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Display Name</label>
                     <input type="text" id="profile-name-input" value="User"
-                        class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm placeholder-gray-600"
+                        class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm placeholder-gray-600"
                         placeholder="Enter your display name"
                         oninput="document.getElementById('profile-display-name-preview').textContent = this.value || 'User'">
                 </div>
@@ -613,13 +613,13 @@
                     <div id="password-section" class="hidden px-4 pb-4 space-y-2.5 border-t border-[#2d2e30]">
                         <p class="text-xs text-gray-600 pt-3 pb-1">Enter your current password to set a new one.</p>
                         <input type="password" id="current-password-input"
-                            class="w-full bg-[#131314] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
+                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
                             placeholder="Current password">
                         <input type="password" id="new-password-input"
-                            class="w-full bg-[#131314] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
+                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
                             placeholder="New password (min. 6 characters)">
                         <input type="password" id="confirm-password-input"
-                            class="w-full bg-[#131314] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
+                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm"
                             placeholder="Confirm new password">
                         <div id="password-status" class="text-xs hidden pt-0.5"></div>
                         <button id="update-password-btn"
@@ -683,7 +683,7 @@
             id="rename-modal-content">
             <h3 class="text-xl font-medium text-gray-200 mb-4">Rename Chat</h3>
             <input type="text" id="rename-chat-input"
-                class="w-full bg-[#131314] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-6"
+                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-6"
                 placeholder="Enter new chat name...">
             <div class="flex justify-end gap-3">
                 <button id="cancel-rename-btn"
@@ -693,7 +693,7 @@
             </div>
         </div>
     </div>
-    <script type="module" src="js/app.js?v=3.92"></script>
+    <script type="module" src="js/app.js?v=3.93"></script>
 
 </body>
 

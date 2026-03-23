@@ -8,7 +8,7 @@
             -webkit-user-select: none;
             user-select: none;
             font-family: 'Outfit', sans-serif;
-            background-color: #131314;
+            background-color: #000000;
         }
 
         /* Re-enable text selection ONLY for the chat messages and inputs */
@@ -178,11 +178,11 @@
 
         .avatar-glow-inner {
             background: linear-gradient(to top right, #8b5cf6, #3b82f6);
-            border: 2px solid #131314;
+            border: 2px solid #000000;
         }
 
         .user-glow-inner {
-            background-color: #131314;
+            background-color: #000000;
             overflow: hidden;
             background-size: cover;
             background-position: center;
@@ -381,7 +381,7 @@
         }
 
         #input-wrapper {
-            background: linear-gradient(to top, #131314 50%, rgba(19, 19, 20, 0.8) 80%, transparent);
+            background: linear-gradient(to top, #000000 50%, rgba(0, 0, 0, 0.8) 80%, transparent);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
         }
@@ -469,7 +469,7 @@
             header {
                 position: relative !important;
                 /* NO FIXED POSITIONING */
-                background-color: rgba(19, 19, 20, 0.75) !important;
+                background-color: rgba(0, 0, 0, 0.75) !important;
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
                 padding-bottom: 8px !important;
@@ -518,7 +518,7 @@
                 /* Prevents input from getting squished */
                 z-index: 50;
                 padding: 10px 14px !important;
-                background-color: rgba(19, 19, 20, 0.75) !important;
+                background-color: rgba(0, 0, 0, 0.75) !important;
                 backdrop-filter: blur(16px);
                 -webkit-backdrop-filter: blur(16px);
                 border-top: 1px solid rgba(40, 42, 44, 0.5);

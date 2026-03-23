@@ -1675,7 +1675,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Increased to w-8 h-8 to match the AI avatar size
             let avatarHtml = userProfile.avatar
                 ? `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-cover bg-center" style="background-image: url('${userProfile.avatar}')"></div></div>`
-                : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-[#131314] text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
+                : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-[#000000] text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
 
             let imageHtml = '';
             if (msgObj.images && msgObj.images.length > 0) {
