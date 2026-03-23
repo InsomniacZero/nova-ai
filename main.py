@@ -50,7 +50,7 @@ async def generate_image_route(prompt: str):
         print("❌ Missing HF_API_KEY in .env!")
         return Response(content=b"", status_code=500)
         
-    url = "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell"
+    url = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
     headers = {"Authorization": f"Bearer {HF_API_KEY}"}
     payload = {"inputs": prompt}
     
