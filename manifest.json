@@ -1,0 +1,21 @@
+{
+  "name": "Nova AI",
+  "short_name": "Nova",
+  "description": "Your ultimate AI companion supporting open source models and completely free tools.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#131415",
+  "icons": [
+    {
+      "src": "Nova.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "Nova.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

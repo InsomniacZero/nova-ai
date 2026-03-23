@@ -6,6 +6,14 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Nova AI</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#131415">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Nova AI">
+    <link rel="apple-touch-icon" href="Nova.png">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts -->
@@ -144,6 +152,18 @@
         </div>
 
         <div class="p-3 mt-auto space-y-2 bg-[#1e1f20] relative z-10 border-t border-[#333537]/50">
+            <!-- PWA Install Button (hidden by default) -->
+            <button id="install-pwa-btn"
+                class="hidden w-full items-center justify-start gap-3 hover:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-[#4285f4] group sidebar-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#4285f4] shrink-0 select-none">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="7 10 12 15 17 10"></polyline>
+                    <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span class="sidebar-text whitespace-nowrap select-none overflow-hidden block">Download App</span>
+            </button>
+
+            <!-- Help Button -->
             <button
                 class="w-full flex items-center justify-start gap-3 hover:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-gray-200 group sidebar-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
