@@ -55,7 +55,7 @@ export function renderHistorySidebar() {
         const safeTitle = (chat.title || "New Chat").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         return `
                 <div class="relative flex items-center group w-full mb-1">
-                    <button class="chat-history-item flex-1 text-left flex items-center gap-3 p-2.5 rounded-xl transition-all duration-200 text-sm truncate pr-10 ${isActive ? 'bg-[#3f4145] text-gray-900 dark:text-white font-medium shadow-sm border border-[#505357]' : 'text-gray-700 dark:text-gray-300 hover:bg-white dark:bg-[#2d2f31] hover:text-gray-900 dark:text-white border border-transparent'}" data-id="${chat.id}">
+                    <button class="chat-history-item flex-1 text-left flex items-center gap-3 p-2.5 rounded-xl transition-all duration-200 text-sm truncate pr-10 ${isActive ? 'bg-[#3f4145] text-gray-900 dark:text-white font-medium shadow-sm border border-[#505357]' : 'text-gray-700 dark:text-gray-300 hover:bg-[#f0f0f0] dark:bg-[#2d2f31] hover:text-gray-900 dark:text-white border border-transparent'}" data-id="${chat.id}">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 ${isActive ? 'text-blue-400' : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:text-gray-300'}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         <span class="truncate pointer-events-none">${safeTitle}</span>
                     </button>
@@ -105,7 +105,7 @@ export function appendMessageUI(msgObj, msgIndex, animate = true) {
         const textContent = safeContent.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         let avatarHtml = state.userProfile.avatar
             ? `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-cover bg-center" style="background-image: url('${state.userProfile.avatar}')"></div></div>`
-            : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-white dark:bg-[#000000] text-gray-900 dark:text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
+            : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-[#f0f0f0] dark:bg-[#000000] text-gray-900 dark:text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
 
         let imageHtml = '';
         if (msgObj.images && msgObj.images.length > 0) {

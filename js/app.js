@@ -120,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (window.innerWidth < 768) {
             const isShowing = sidebar.classList.toggle('show');
             if (isShowing) {
-                sidebar.classList.add('absolute', 'z-50', 'shadow-2xl', 'bg-white dark:bg-[#1e1f20]');
+                sidebar.classList.add('absolute', 'z-50', 'shadow-2xl', 'bg-[#f0f0f0] dark:bg-[#1e1f20]');
                 if (backdrop) backdrop.classList.add('show');
             } else {
                 if (backdrop) backdrop.classList.remove('show');
