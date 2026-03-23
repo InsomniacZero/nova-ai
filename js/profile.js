@@ -185,7 +185,7 @@ export function initProfile() {
         emit('renderChatHistory');
         
         const btnText = saveProfileBtn.querySelector('.btn-text');
-        btnText.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Saved';
+        btnText.innerHTML = '<div class="flex items-center justify-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Saved</span></div>';
         saveProfileBtn.classList.remove('bg-[#4285f4]', 'hover:bg-[#5a95f5]');
         saveProfileBtn.classList.add('bg-green-500', 'hover:bg-green-400');
         
