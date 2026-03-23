@@ -37,7 +37,7 @@ export function uiConfirm(title, message, btnText, btnClass, actionCallback) {
     document.getElementById('confirm-message').textContent = message;
     const actionBtn = document.getElementById('action-confirm-btn');
     actionBtn.textContent = btnText;
-    actionBtn.className = `px-4 py-2 rounded-lg text-sm font-medium text-white transition-colors ${btnClass}`;
+    actionBtn.className = `px-4 py-2 rounded-lg text-sm font-medium text-gray-900 dark:text-white transition-colors ${btnClass}`;
     activeConfirmAction = actionCallback;
     openModal(confirmModal, confirmModalContent);
 }
@@ -51,7 +51,7 @@ export function uiPrompt(currentName, actionCallback) {
 
 export function setSendButtonState(s) {
     if (s === 'disabled') {
-        sendBtn.className = 'p-2 bg-[#333537] text-gray-400 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10';
+        sendBtn.className = 'p-2 bg-gray-200 dark:bg-[#333537] text-gray-600 dark:text-gray-400 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10';
         sendBtn.setAttribute('disabled', 'true');
         iconSend.classList.remove('hidden'); iconStop.classList.add('hidden');
     } else if (s === 'ready') {
@@ -59,7 +59,7 @@ export function setSendButtonState(s) {
         sendBtn.removeAttribute('disabled');
         iconSend.classList.remove('hidden'); iconStop.classList.add('hidden');
     } else if (s === 'generating') {
-        sendBtn.className = 'p-2 bg-[#333537] text-white hover:bg-[#444749] rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center w-10 h-10';
+        sendBtn.className = 'p-2 bg-gray-200 dark:bg-[#333537] text-gray-900 dark:text-white hover:bg-[#444749] rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center w-10 h-10';
         sendBtn.removeAttribute('disabled');
         iconSend.classList.add('hidden'); iconStop.classList.remove('hidden');
     }
@@ -110,18 +110,18 @@ export function renderImagePreviews() {
 
     html += state.currentSelectedImages.map((img, idx) => `
                 <div class="relative inline-block shrink-0">
-                    <img src="${img}" class="h-16 w-16 object-cover rounded-lg border border-[#333537] shadow-sm">
-                    <button class="remove-image-btn absolute -top-2 -right-2 bg-[#444749] text-gray-200 hover:text-white rounded-full p-1 shadow-md transition-colors" data-index="${idx}" title="Remove image">
+                    <img src="${img}" class="h-16 w-16 object-cover rounded-lg border border-gray-300 dark:border-[#333537] shadow-sm">
+                    <button class="remove-image-btn absolute -top-2 -right-2 bg-[#444749] text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:text-white rounded-full p-1 shadow-md transition-colors" data-index="${idx}" title="Remove image">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
             `).join('');
 
     html += state.currentSelectedFiles.map((file, idx) => `
-                <div class="relative inline-flex items-center gap-2 bg-[#282a2c] border border-[#333537] rounded-lg px-3 py-2 shrink-0 h-16 max-w-[180px]">
+                <div class="relative inline-flex items-center gap-2 bg-gray-100 dark:bg-[#282a2c] border border-gray-300 dark:border-[#333537] rounded-lg px-3 py-2 shrink-0 h-16 max-w-[180px]">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-blue-400 shrink-0"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                    <span class="text-xs text-gray-300 truncate font-mono">${file.name}</span>
-                    <button class="remove-file-btn absolute -top-2 -right-2 bg-[#444749] text-gray-200 hover:text-white rounded-full p-1 shadow-md transition-colors" data-index="${idx}" title="Remove file">
+                    <span class="text-xs text-gray-700 dark:text-gray-300 truncate font-mono">${file.name}</span>
+                    <button class="remove-file-btn absolute -top-2 -right-2 bg-[#444749] text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:text-white rounded-full p-1 shadow-md transition-colors" data-index="${idx}" title="Remove file">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                     </button>
                 </div>
@@ -209,6 +209,21 @@ export function initUI() {
     renameModal = document.getElementById('rename-modal');
     renameModalContent = document.getElementById('rename-modal-content');
     renameChatInput = document.getElementById('rename-chat-input');
+
+    // Theme Toggle
+    const themeToggle = document.getElementById('theme-toggle');
+    if (themeToggle) {
+        themeToggle.checked = localStorage.theme === 'light';
+        themeToggle.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+    }
 
     // Confirm modal buttons
     document.getElementById('cancel-confirm-btn').addEventListener('click', () => closeModal(confirmModal, confirmModalContent));

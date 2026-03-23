@@ -6,6 +6,15 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Nova AI</title>
+    <!-- Theme Init (Prevents FOUC) -->
+    <script>
+        if (localStorage.theme === 'light') {
+            document.documentElement.classList.remove('dark');
+        } else {
+            document.documentElement.classList.add('dark');
+            localStorage.theme = 'dark'; // explicit default
+        }
+    </script>
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#131415">
@@ -16,6 +25,11 @@
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 
@@ -58,7 +72,7 @@
     <link rel="icon" type="image/png" href="Nova.png">
 </head>
 
-<body class="text-gray-200 bg-[#000000] flex overflow-x-hidden">
+<body class="text-gray-800 dark:text-gray-200 bg-white dark:bg-[#000000] flex overflow-x-hidden">
 
     <!-- Toast Container -->
     <div id="toast-container"
@@ -66,44 +80,44 @@
 
     <!-- Auth Overlay -->
     <div id="auth-overlay"
-        class="fixed inset-0 z-[9999] bg-[#000000] flex flex-col items-center justify-center transition-opacity duration-500">
+        class="fixed inset-0 z-[9999] bg-white dark:bg-[#000000] flex flex-col items-center justify-center transition-opacity duration-500">
         <div class="text-center mb-8 transform transition-transform duration-700 hover:scale-[1.01]">
             <div class="w-24 h-24 mx-auto mb-6 avatar-glow-wrapper">
                 <div class="avatar-glow-inner">
-                    <svg class="text-white w-12 h-12" viewBox="0 0 24 24" fill="none"
+                    <svg class="text-gray-900 dark:text-white w-12 h-12" viewBox="0 0 24 24" fill="none"
                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"
                             fill="currentColor" />
                     </svg>
                 </div>
             </div>
-            <h1 class="text-5xl font-semibold text-white mb-3 tracking-wide">Nova <span class="gradient-text">AI</span>
+            <h1 class="text-5xl font-semibold text-gray-900 dark:text-white mb-3 tracking-wide">Nova <span class="gradient-text">AI</span>
             </h1>
-            <p class="text-gray-400 font-medium mb-6">Sign in to sync your personas and chats.</p>
+            <p class="text-gray-600 dark:text-gray-400 font-medium mb-6">Sign in to sync your personas and chats.</p>
 
             <div class="flex flex-col gap-3 w-full max-w-xs mx-auto">
                 <input type="email" id="auth-email" placeholder="Email address"
-                    class="w-full bg-[#1e1f20] border border-[#333537] rounded-xl px-4 py-3 text-gray-200 focus:outline-none focus:border-blue-500 transition-all">
+                    class="w-full bg-white dark:bg-[#1e1f20] border border-gray-300 dark:border-[#333537] rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-blue-500 transition-all">
                 <input type="password" id="auth-password" placeholder="Password"
-                    class="w-full bg-[#1e1f20] border border-[#333537] rounded-xl px-4 py-3 text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-2">
+                    class="w-full bg-white dark:bg-[#1e1f20] border border-gray-300 dark:border-[#333537] rounded-xl px-4 py-3 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-2">
 
                 <div class="flex items-center justify-start w-full px-1 mb-2">
                     <label class="flex items-center gap-2 cursor-pointer group">
                         <input type="checkbox" id="remember-me-checkbox"
-                            class="w-4 h-4 rounded border-[#333537] bg-[#000000] text-blue-600 focus:ring-blue-500/50 focus:ring-offset-0 transition-all cursor-pointer accent-blue-600"
+                            class="w-4 h-4 rounded border-gray-300 dark:border-[#333537] bg-white dark:bg-[#000000] text-blue-600 focus:ring-blue-500/50 focus:ring-offset-0 transition-all cursor-pointer accent-blue-600"
                             checked>
-                        <span class="text-sm text-gray-400 group-hover:text-gray-200 transition-colors">Remember
+                        <span class="text-sm text-gray-600 dark:text-gray-400 group-hover:text-gray-800 dark:text-gray-200 transition-colors">Remember
                             me</span>
                     </label>
                 </div>
 
                 <button id="email-signin-btn"
-                    class="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)]">
+                    class="w-full bg-blue-600 text-gray-900 dark:text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-500 transition-colors shadow-[0_0_20px_rgba(59,130,246,0.2)]">
                     Sign In
                 </button>
 
                 <button id="email-signup-btn"
-                    class="w-full bg-transparent text-gray-400 border border-[#333537] px-6 py-3 rounded-xl font-bold hover:text-white hover:bg-[#333537] transition-colors">
+                    class="w-full bg-transparent text-gray-600 dark:text-gray-400 border border-gray-300 dark:border-[#333537] px-6 py-3 rounded-xl font-bold hover:text-gray-900 dark:text-white hover:bg-gray-200 dark:bg-[#333537] transition-colors">
                     Create Account
                 </button>
                 <p id="auth-error-msg" class="text-red-400 text-sm mt-2 hidden"></p>
@@ -114,11 +128,11 @@
     <div id="sidebar-backdrop"></div>
     <!-- Sidebar -->
     <aside id="sidebar"
-        class="md:w-[260px] w-[260px] glass-panel flex-col transition-[width] duration-300 ease-in-out flex h-full border-r border-[#333537]/50 relative z-20 shrink-0 overflow-hidden">
+        class="md:w-[260px] w-[260px] glass-panel flex-col transition-[width] duration-300 ease-in-out flex h-full border-r border-gray-300 dark:border-[#333537]/50 relative z-20 shrink-0 overflow-hidden">
         
         <!-- Desktop Top Hamburger -->
         <div class="px-3 pt-4 pb-2 hidden md:block">
-            <button id="sidebar-collapse-btn" class="w-11 h-11 flex items-center justify-center text-gray-200 hover:text-white hover:bg-[#1e1f20] rounded-full transition-colors duration-200 group">
+            <button id="sidebar-collapse-btn" class="w-11 h-11 flex items-center justify-center text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:text-white hover:bg-white dark:bg-[#1e1f20] rounded-full transition-colors duration-200 group">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="ml-[2px] transition-transform duration-300 group-hover:scale-105">
                     <line x1="3" y1="12" x2="21" y2="12"></line>
                     <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -129,9 +143,9 @@
 
         <div class="px-3 pb-4 md:pt-2 pt-4">
             <button id="new-chat-btn"
-                class="w-full flex items-center justify-start gap-3 bg-[#131415] hover:bg-[#1e1f20] text-gray-200 px-3 py-3 rounded-xl transition-all duration-300 border border-[#333537]/50 hover:border-gray-500/50 shadow-sm sidebar-btn">
+                class="w-full flex items-center justify-start gap-3 bg-gray-50 dark:bg-[#131415] hover:bg-white dark:bg-[#1e1f20] text-gray-800 dark:text-gray-200 px-3 py-3 rounded-xl transition-all duration-300 border border-gray-300 dark:border-[#333537]/50 hover:border-gray-500/50 shadow-sm sidebar-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                    stroke-linecap="round" stroke-linejoin="round" class="text-white shrink-0 select-none">
+                    stroke-linecap="round" stroke-linejoin="round" class="text-gray-900 dark:text-white shrink-0 select-none">
                     <path d="M12 20h9"></path>
                     <path d="M16.5 3.5a2.121 2 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
                 </svg>
@@ -141,7 +155,7 @@
 
         <div class="flex-1 overflow-y-auto overflow-x-hidden px-4 mt-4 pb-20 relative" id="history-container">
             <div class="flex justify-between items-center mb-3 px-2">
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Recent</p>
+                <p class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">Recent</p>
                 <button id="clear-history-btn"
                     class="text-xs font-medium text-red-400 hover:text-red-300 transition-colors"
                     title="Clear History">Clear</button>
@@ -151,10 +165,10 @@
             </div>
         </div>
 
-        <div class="p-3 mt-auto space-y-2 bg-[#1e1f20] relative z-10 border-t border-[#333537]/50">
+        <div class="p-3 mt-auto space-y-2 bg-white dark:bg-[#1e1f20] relative z-10 border-t border-gray-300 dark:border-[#333537]/50">
             <!-- PWA Install Button (hidden by default) -->
             <button id="install-pwa-btn"
-                class="hidden w-full items-center justify-start gap-3 hover:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-[#4285f4] group sidebar-btn">
+                class="hidden w-full items-center justify-start gap-3 hover:bg-white dark:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-[#4285f4] group sidebar-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[#4285f4] shrink-0 select-none">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
@@ -165,10 +179,10 @@
 
             <!-- Help Button -->
             <button
-                class="w-full flex items-center justify-start gap-3 hover:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-gray-200 group sidebar-btn">
+                class="w-full flex items-center justify-start gap-3 hover:bg-white dark:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-gray-800 dark:text-gray-200 group sidebar-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
-                    class="text-gray-300 group-hover:text-white transition-colors shrink-0 select-none">
+                    class="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white transition-colors shrink-0 select-none">
                     <circle cx="12" cy="12" r="10" />
                     <path d="M12 16v-4" />
                     <path d="M12 8h.01" />
@@ -176,10 +190,10 @@
                 <span class="sidebar-text whitespace-nowrap select-none overflow-hidden block">Help</span>
             </button>
             <button id="settings-btn"
-                class="w-full flex items-center justify-start gap-3 hover:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-gray-200 group sidebar-btn">
+                class="w-full flex items-center justify-start gap-3 hover:bg-white dark:bg-[#2d2f31] p-3 rounded-xl transition-all duration-300 text-sm font-medium text-gray-800 dark:text-gray-200 group sidebar-btn">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                     stroke-linecap="round" stroke-linejoin="round"
-                    class="text-gray-300 group-hover:text-white transition-colors shrink-0 select-none">
+                    class="text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white transition-colors shrink-0 select-none">
                     <path
                         d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l-.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
                     <circle cx="12" cy="12" r="3" />
@@ -190,19 +204,19 @@
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full bg-[#000000] relative overflow-hidden transition-all duration-300">
+    <main class="flex-1 flex flex-col h-full bg-white dark:bg-[#000000] relative overflow-hidden transition-all duration-300">
         <header
-            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-[#000000] transition-colors">
+            class="flex justify-between items-center p-4 shrink-0 z-30 relative sticky top-0 bg-white dark:bg-[#000000] transition-colors">
 
             <div id="header-chat-title"
-                class="absolute left-1/2 transform -translate-x-1/2 text-[15px] font-medium text-gray-300 truncate w-[45%] text-center pointer-events-none hidden sm:block">
+                class="absolute left-1/2 transform -translate-x-1/2 text-[15px] font-medium text-gray-700 dark:text-gray-300 truncate w-[45%] text-center pointer-events-none hidden sm:block">
             </div>
 
             <div class="flex items-center gap-3 relative z-10">
-                <button class="hover:bg-[#333537] p-2 rounded-full transition-colors md:hidden" id="header-menu-btn"
+                <button class="hover:bg-gray-200 dark:bg-[#333537] p-2 rounded-full transition-colors md:hidden" id="header-menu-btn"
                     title="Toggle Sidebar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                        stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                        stroke-linecap="round" stroke-linejoin="round" class="text-gray-600 dark:text-gray-400">
                         <line x1="4" x2="20" y1="12" y2="12" />
                         <line x1="4" x2="20" y1="6" y2="6" />
                         <line x1="4" x2="20" y1="18" y2="18" />
@@ -210,29 +224,29 @@
                 </button>
 
                 <div class="relative" id="persona-dropdown-container">
-                    <div class="text-xl font-medium text-gray-300 flex items-center gap-2 cursor-pointer hover:bg-[#282a2c] px-3 py-1.5 rounded-lg transition-colors select-none"
+                    <div class="text-xl font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2 cursor-pointer hover:bg-gray-100 dark:bg-[#282a2c] px-3 py-1.5 rounded-lg transition-colors select-none"
                         id="header-persona-toggle">
                         <span id="header-persona-title"
                             class="truncate max-w-[120px] inline-block align-bottom">Nova</span>
-                        <span class="text-xs font-semibold bg-[#333537] text-gray-300 px-2 py-0.5 rounded-full"
+                        <span class="text-xs font-semibold bg-gray-200 dark:bg-[#333537] text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full"
                             id="header-model-display">Writing</span>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                            class="text-gray-500 transition-transform duration-200" id="header-persona-chevron">
+                            class="text-gray-500 dark:text-gray-500 transition-transform duration-200" id="header-persona-chevron">
                             <path d="m6 9 6 6 6-6" />
                         </svg>
                     </div>
 
                     <div id="persona-dropdown-menu"
-                        class="hidden absolute top-full left-0 mt-2 w-64 bg-[#282a2c] border border-[#333537] rounded-xl shadow-2xl z-50 py-1 flex-col overflow-hidden">
+                        class="hidden absolute top-full left-0 mt-2 w-64 bg-gray-100 dark:bg-[#282a2c] border border-gray-300 dark:border-[#333537] rounded-xl shadow-2xl z-50 py-1 flex-col overflow-hidden">
                         <div
-                            class="px-4 py-2 text-[10px] font-semibold text-gray-500 uppercase tracking-wider border-b border-[#333537] mb-1">
+                            class="px-4 py-2 text-[10px] font-semibold text-gray-500 dark:text-gray-500 uppercase tracking-wider border-b border-gray-300 dark:border-[#333537] mb-1">
                             Select Persona</div>
                         <div id="persona-list" class="max-h-60 overflow-y-auto">
                         </div>
-                        <div class="border-t border-[#333537] mt-1 pt-1">
+                        <div class="border-t border-gray-300 dark:border-[#333537] mt-1 pt-1">
                             <button id="add-persona-btn"
-                                class="w-full text-left px-4 py-2.5 text-sm text-blue-400 hover:bg-[#333537] transition-colors flex items-center gap-2 font-medium">
+                                class="w-full text-left px-4 py-2.5 text-sm text-blue-400 hover:bg-gray-200 dark:bg-[#333537] transition-colors flex items-center gap-2 font-medium">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -248,10 +262,10 @@
             <div class="flex items-center gap-2 pr-2">
 
                 <div class="relative" id="current-chat-options-container">
-                    <button class="hover:bg-[#333537] p-2 rounded-full transition-colors hidden"
+                    <button class="hover:bg-gray-200 dark:bg-[#333537] p-2 rounded-full transition-colors hidden"
                         id="current-chat-menu-btn" title="Chat Options">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600 dark:text-gray-400">
                             <circle cx="12" cy="12" r="1"></circle>
                             <circle cx="12" cy="5" r="1"></circle>
                             <circle cx="12" cy="19" r="1"></circle>
@@ -259,17 +273,17 @@
                     </button>
 
                     <div id="current-chat-dropdown"
-                        class="hidden absolute top-full right-0 mt-2 w-48 bg-[#282a2c] border border-[#333537] rounded-xl shadow-2xl z-50 py-1 flex flex-col">
+                        class="hidden absolute top-full right-0 mt-2 w-48 bg-gray-100 dark:bg-[#282a2c] border border-gray-300 dark:border-[#333537] rounded-xl shadow-2xl z-50 py-1 flex flex-col">
                         <button id="header-rename-chat-btn"
-                            class="w-full text-left px-4 py-2.5 text-sm text-gray-200 hover:bg-[#333537] hover:text-white transition-colors flex items-center gap-3">
+                            class="w-full text-left px-4 py-2.5 text-sm text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:bg-[#333537] hover:text-gray-900 dark:text-white transition-colors flex items-center gap-3">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400">
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-600 dark:text-gray-400">
                                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
                             </svg>
                             Rename
                         </button>
                         <button id="header-delete-chat-btn"
-                            class="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-[#333537] hover:text-red-300 transition-colors flex items-center gap-3">
+                            class="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-gray-200 dark:bg-[#333537] hover:text-red-300 transition-colors flex items-center gap-3">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <polyline points="3 6 5 6 21 6"></polyline>
@@ -284,7 +298,7 @@
 
                 <div class="w-9 h-9 shrink-0 user-glow-wrapper transition-transform hover:scale-105 cursor-pointer"
                     id="user-profile-btn" title="Profile Settings">
-                    <div class="user-glow-inner text-white text-sm font-semibold" id="user-profile-header-display">
+                    <div class="user-glow-inner text-gray-900 dark:text-white text-sm font-semibold" id="user-profile-header-display">
                         <span id="user-profile-initial">U</span>
                     </div>
                 </div>
@@ -307,25 +321,25 @@
 
                     <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 max-w-3xl">
                         <button
-                            class="suggestion-chip p-4 rounded-xl border border-[#333537]/50 bg-[#1e1f20]/50 hover:bg-[#282a2c] hover:border-[#444749] transition-all text-left flex flex-col gap-2 group">
+                            class="suggestion-chip p-4 rounded-xl border border-gray-300 dark:border-[#333537]/50 bg-white dark:bg-[#1e1f20]/50 hover:bg-gray-100 dark:bg-[#282a2c] hover:border-gray-400 dark:border-[#444749] transition-all text-left flex flex-col gap-2 group">
                             <span class="text-xl group-hover:scale-110 transition-transform origin-left">💡</span>
-                            <span class="text-sm font-medium text-gray-300 group-hover:text-white">Brainstorm
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">Brainstorm
                                 ideas</span>
                         </button>
                         <button
-                            class="suggestion-chip p-4 rounded-xl border border-[#333537]/50 bg-[#1e1f20]/50 hover:bg-[#282a2c] hover:border-[#444749] transition-all text-left flex flex-col gap-2 group">
+                            class="suggestion-chip p-4 rounded-xl border border-gray-300 dark:border-[#333537]/50 bg-white dark:bg-[#1e1f20]/50 hover:bg-gray-100 dark:bg-[#282a2c] hover:border-gray-400 dark:border-[#444749] transition-all text-left flex flex-col gap-2 group">
                             <span class="text-xl group-hover:scale-110 transition-transform origin-left">💻</span>
-                            <span class="text-sm font-medium text-gray-300 group-hover:text-white">Help me code</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">Help me code</span>
                         </button>
                         <button
-                            class="suggestion-chip p-4 rounded-xl border border-[#333537]/50 bg-[#1e1f20]/50 hover:bg-[#282a2c] hover:border-[#444749] transition-all text-left flex flex-col gap-2 group">
+                            class="suggestion-chip p-4 rounded-xl border border-gray-300 dark:border-[#333537]/50 bg-white dark:bg-[#1e1f20]/50 hover:bg-gray-100 dark:bg-[#282a2c] hover:border-gray-400 dark:border-[#444749] transition-all text-left flex flex-col gap-2 group">
                             <span class="text-xl group-hover:scale-110 transition-transform origin-left">📝</span>
-                            <span class="text-sm font-medium text-gray-300 group-hover:text-white">Write an email</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">Write an email</span>
                         </button>
                         <button
-                            class="suggestion-chip p-4 rounded-xl border border-[#333537]/50 bg-[#1e1f20]/50 hover:bg-[#282a2c] hover:border-[#444749] transition-all text-left flex flex-col gap-2 group">
+                            class="suggestion-chip p-4 rounded-xl border border-gray-300 dark:border-[#333537]/50 bg-white dark:bg-[#1e1f20]/50 hover:bg-gray-100 dark:bg-[#282a2c] hover:border-gray-400 dark:border-[#444749] transition-all text-left flex flex-col gap-2 group">
                             <span class="text-xl group-hover:scale-110 transition-transform origin-left">🔍</span>
-                            <span class="text-sm font-medium text-gray-300 group-hover:text-white">Summarize text</span>
+                            <span class="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:text-white">Summarize text</span>
                         </button>
                     </div>
                 </div>
@@ -334,29 +348,29 @@
         </div>
 
         <!-- ======= IMAGE LIGHTBOX ======= -->
-        <div id="image-lightbox" class="fixed inset-0 z-[200] hidden flex-col bg-[#000000]/95 backdrop-blur-sm" role="dialog">
+        <div id="image-lightbox" class="fixed inset-0 z-[200] hidden flex-col bg-white dark:bg-[#000000]/95 backdrop-blur-sm" role="dialog">
             <div class="flex items-center gap-4 px-4 py-3 shrink-0">
-                <button id="lightbox-close-btn" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-300 hover:bg-[#333537] transition-colors">
+                <button id="lightbox-close-btn" class="w-10 h-10 flex items-center justify-center rounded-full text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-[#333537] transition-colors">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="19" y1="12" x2="5" y2="12"></line>
                         <polyline points="12 19 5 12 12 5"></polyline>
                     </svg>
                 </button>
-                <span id="lightbox-filename" class="text-sm text-gray-300 font-medium truncate">image.jpg</span>
+                <span id="lightbox-filename" class="text-sm text-gray-700 dark:text-gray-300 font-medium truncate">image.jpg</span>
             </div>
             <div class="flex-1 flex items-center justify-center p-6 overflow-auto" id="lightbox-backdrop">
                 <img id="lightbox-img" src="" alt="" class="max-w-full max-h-full object-contain rounded-2xl shadow-2xl select-none" draggable="false">
             </div>
         </div>
 
-        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#000000] via-[#000000]/90 to-transparent">
+        <div id="input-wrapper" class="w-full flex justify-center p-4 sticky bottom-0 z-30 glass-panel border-t border-gray-300 dark:border-[#333537]/50 md:border-t-0 md:bg-transparent md:backdrop-filter-none md:will-change-auto bg-gradient-to-t from-[#000000] via-[#000000]/90 to-transparent">
             <div class="w-full max-w-2xl">
 
                 <div class="max-w-4xl mx-auto w-full relative pointer-events-auto">
 
                     <!-- Floating Scroll to Bottom Button -->
                     <button id="scroll-to-bottom-btn"
-                        class="absolute -top-14 left-1/2 transform -translate-x-1/2 bg-[#282a2c] hover:bg-[#333537] border border-[#444749] rounded-full p-2.5 shadow-lg text-gray-300 transition-all duration-300 translate-y-20 opacity-0 z-40 hidden flex items-center justify-center cursor-pointer">
+                        class="absolute -top-14 left-1/2 transform -translate-x-1/2 bg-gray-100 dark:bg-[#282a2c] hover:bg-gray-200 dark:bg-[#333537] border border-gray-400 dark:border-[#444749] rounded-full p-2.5 shadow-lg text-gray-700 dark:text-gray-300 transition-all duration-300 translate-y-20 opacity-0 z-40 hidden flex items-center justify-center cursor-pointer">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                             stroke-linecap="round" stroke-linejoin="round">
                             <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -365,7 +379,7 @@
                     </button>
 
                     <div id="edit-mode-banner"
-                        class="hidden absolute -top-10 left-4 right-4 bg-[#282a2c] border border-[#333537] border-b-0 rounded-t-xl px-4 py-2 justify-between items-center text-sm z-0 shadow-sm transition-all pb-4 translate-y-2">
+                        class="hidden absolute -top-10 left-4 right-4 bg-gray-100 dark:bg-[#282a2c] border border-gray-300 dark:border-[#333537] border-b-0 rounded-t-xl px-4 py-2 justify-between items-center text-sm z-0 shadow-sm transition-all pb-4 translate-y-2">
                         <span class="text-blue-400 flex items-center gap-2 font-medium">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -374,14 +388,14 @@
                             Editing Message...
                         </span>
                         <button id="cancel-edit-btn"
-                            class="text-gray-400 hover:text-white transition-colors">Cancel</button>
+                            class="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white transition-colors">Cancel</button>
                     </div>
 
                     <div
-                        class="relative z-10 bg-[#1e1f20] rounded-3xl p-2 flex flex-col transition-all border border-[#333537]/50 focus-within:border-[#444749] focus-within:bg-[#282a2c] focus-within:shadow-md">
+                        class="relative z-10 bg-white dark:bg-[#1e1f20] rounded-3xl p-2 flex flex-col transition-all border border-gray-300 dark:border-[#333537]/50 focus-within:border-gray-400 dark:border-[#444749] focus-within:bg-gray-100 dark:bg-[#282a2c] focus-within:shadow-md">
 
                         <!-- Multiple Image Preview Container -->
-                        <div id="image-preview-container" class="hidden border-b border-[#333537]/50">
+                        <div id="image-preview-container" class="hidden border-b border-gray-300 dark:border-[#333537]/50">
                             <div id="image-preview-list" class="flex gap-4 overflow-x-auto p-4 pb-2">
                                 <!-- Previews injected here -->
                             </div>
@@ -391,13 +405,13 @@
                         <input type="file" id="chat-file-input" class="hidden"
                             accept=".txt,.md,.json,.js,.py,.html,.css,.csv,.xml,.env,.log" multiple> <textarea
                             id="chat-input" rows="1"
-                            class="w-full bg-transparent resize-none outline-none px-4 py-3 max-h-48 text-[15px] text-gray-200 overflow-y-auto placeholder-gray-500 focus:ring-0 transition-shadow rounded-xl"
+                            class="w-full bg-transparent resize-none outline-none px-4 py-3 max-h-48 text-[15px] text-gray-800 dark:text-gray-200 overflow-y-auto placeholder-gray-400 dark:placeholder-gray-400 dark:placeholder-gray-500 focus:ring-0 transition-shadow rounded-xl"
                             placeholder="Type a message..."></textarea>
 
                         <div class="flex justify-between items-center px-2 pb-1">
-                            <div class="flex gap-1 text-gray-300">
+                            <div class="flex gap-1 text-gray-700 dark:text-gray-300">
                                 <button id="upload-image-btn"
-                                    class="p-2 hover:bg-[#333537] rounded-full transition-colors"
+                                    class="p-2 hover:bg-gray-200 dark:bg-[#333537] rounded-full transition-colors"
                                     title="Upload image(s)">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -407,7 +421,7 @@
                                     </svg>
                                 </button>
                                 <button id="upload-file-btn"
-                                    class="p-2 hover:bg-[#333537] rounded-full transition-colors"
+                                    class="p-2 hover:bg-gray-200 dark:bg-[#333537] rounded-full transition-colors"
                                     title="Attach file (Code, TXT, JSON)">
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                         stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -418,7 +432,7 @@
                             </div>
 
                             <button id="send-btn"
-                                class="p-2 bg-[#333537] text-gray-500 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10"
+                                class="p-2 bg-gray-200 dark:bg-[#333537] text-gray-500 dark:text-gray-500 rounded-full transition-all duration-200 cursor-not-allowed flex items-center justify-center w-10 h-10"
                                 disabled>
                                 <svg id="icon-send" width="18" height="18" viewBox="0 0 24 24" fill="none"
                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -443,12 +457,12 @@
     <!-- Create/Edit Persona Modal -->
     <div id="create-persona-modal"
         class="fixed inset-0 modal-backdrop z-[60] flex items-center justify-center hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-[#1e1f20] border border-[#333537] rounded-2xl shadow-2xl w-full max-w-[500px] p-6 transform scale-95 transition-transform duration-200"
+        <div class="bg-white dark:bg-[#1e1f20] border border-gray-300 dark:border-[#333537] rounded-2xl shadow-2xl w-full max-w-[500px] p-6 transform scale-95 transition-transform duration-200"
             id="create-persona-content">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-medium text-gray-200" id="persona-modal-title">Create New Persona</h3>
+                <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200" id="persona-modal-title">Create New Persona</h3>
                 <button id="close-create-persona-btn"
-                    class="text-gray-400 hover:text-gray-200 transition-colors p-1 rounded-full hover:bg-[#333537]">
+                    class="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-gray-200 transition-colors p-1 rounded-full hover:bg-gray-200 dark:bg-[#333537]">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -461,26 +475,26 @@
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1.5">Character/Persona Name</label>
+                    <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Character/Persona Name</label>
                     <input type="text" id="new-persona-name"
-                        class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                        class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                         placeholder="e.g. Sukuna">
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium text-gray-400 mb-1.5">System Prompt (Personality &
+                    <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">System Prompt (Personality &
                         Rules)</label>
                     <textarea id="new-persona-prompt" rows="8"
-                        class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-[14px] text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none placeholder-gray-600"
+                        class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-[14px] text-gray-800 dark:text-gray-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all resize-none placeholder-gray-600"
                         placeholder="[Character: Name]\n[Personality: ...]\n[Instructions: ...]"></textarea>
                 </div>
             </div>
 
             <div class="mt-8 flex justify-end gap-3">
                 <button id="cancel-create-persona-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#333537] transition-colors">Cancel</button>
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-[#333537] transition-colors">Cancel</button>
                 <button id="save-new-persona-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors">Save
+                    class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-gray-900 dark:text-white transition-colors">Save
                     Persona</button>
             </div>
         </div>
@@ -489,14 +503,14 @@
     <!-- General Settings Modal -->
     <div id="settings-modal"
         class="fixed inset-0 modal-backdrop z-[999] flex items-end sm:items-center justify-center p-4 hidden opacity-0 transition-opacity duration-200">
-        <div class="bg-[#1e1f20] rounded-2xl shadow-2xl w-full max-w-[500px] transform scale-95 transition-transform duration-200 overflow-hidden flex flex-col max-h-[90vh]"
+        <div class="bg-white dark:bg-[#1e1f20] rounded-2xl shadow-2xl w-full max-w-[500px] transform scale-95 transition-transform duration-200 overflow-hidden flex flex-col max-h-[90vh]"
             id="settings-modal-content">
             
             <!-- Header -->
-            <div class="relative px-6 py-5 border-b border-[#333537] shrink-0">
-                <h3 class="text-lg font-semibold text-white">Application Settings</h3>
+            <div class="relative px-6 py-5 border-b border-gray-300 dark:border-[#333537] shrink-0">
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Application Settings</h3>
                 <button id="close-settings-btn"
-                    class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-md text-white border border-white/10 hover:bg-black/50 transition-all z-10">
+                    class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-white dark:bg-black/30 backdrop-blur-md text-gray-900 dark:text-white border border-white/10 hover:bg-white dark:bg-black/50 transition-all z-10">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -512,41 +526,55 @@
                 <div id="api-settings-view" class="space-y-5">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Text Model (Default)</label>
+                            <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-500">Text Model (Default)</label>
                             <input type="text" id="api-text-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                         <div class="space-y-1.5">
-                            <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500">Vision Model (Images)</label>
+                            <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-500">Vision Model (Images)</label>
                             <input type="text" id="api-vision-model-input" value="x-ai/grok-4-fast"
-                                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
+                                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all text-sm font-medium">
                         </div>
                     </div>
                 </div>
 
-                <div class="h-px bg-[#333537]"></div>
+                <!-- Appearance Settings Tab -->
+                <div id="appearance-settings-view" class="space-y-5">
+                    <div class="flex items-center justify-between p-4 bg-white dark:bg-[#000000] border border-gray-200 dark:border-gray-300 dark:border-[#333537] rounded-xl transition-colors">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold text-gray-900 dark:text-gray-100">Light Mode</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-500 mt-0.5">Switch the app theme to light</span>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="theme-toggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-200 dark:bg-[#333537] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-[#4285f4]"></div>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="h-px bg-gray-200 dark:bg-[#333537]"></div>
 
                 <!-- Personality Settings Tab -->
                 <div id="prompt-settings-view" class="space-y-5">
                     <div class="space-y-1.5">
-                        <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 flex items-center justify-between">
+                        <label class="block text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-500 flex items-center justify-between">
                             <span>System Prompt for <span id="settings-persona-name-label" class="text-blue-400 font-bold ml-1">Nova</span></span>
                         </label>
                         <textarea id="system-prompt-input" rows="8"
-                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-3 text-sm text-gray-200 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all resize-none placeholder-gray-600 leading-relaxed font-medium"
+                            class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-3 text-sm text-gray-800 dark:text-gray-200 focus:outline-none focus:border-[#4285f4] focus:ring-1 focus:ring-[#4285f4]/30 transition-all resize-none placeholder-gray-600 leading-relaxed font-medium"
                             placeholder="Define personality here..."></textarea>
                     </div>
                 </div>
             </div>
 
             <!-- Footer -->
-            <div class="px-6 py-4 border-t border-[#333537] bg-[#1e1f20] shrink-0 flex justify-end gap-3">
+            <div class="px-6 py-4 border-t border-gray-300 dark:border-[#333537] bg-white dark:bg-[#1e1f20] shrink-0 flex justify-end gap-3">
                 <button id="cancel-settings-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-[#2a2b2c] transition-colors">
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:bg-[#2a2b2c] transition-colors">
                     Cancel
                 </button>
                 <button id="save-settings-btn"
-                    class="px-5 py-2 rounded-lg text-sm font-semibold bg-[#4285f4] hover:bg-[#5a95f5] text-white transition-colors shadow-sm">
+                    class="px-5 py-2 rounded-lg text-sm font-semibold bg-[#4285f4] hover:bg-[#5a95f5] text-gray-900 dark:text-white transition-colors shadow-sm">
                     Save Changes
                 </button>
             </div>
@@ -556,15 +584,15 @@
     <!-- Profile Settings Modal -->
     <div id="profile-modal"
         class="fixed inset-0 modal-backdrop z-50 flex items-end sm:items-center justify-center hidden opacity-0 backdrop-blur-sm transition-all duration-300">
-        <div class="bg-[#1e1f20] rounded-2xl shadow-[0_0_60px_rgba(66,133,244,0.12)] border border-white/5 w-full max-w-md transform scale-[0.97] transition-transform duration-300 ease-out overflow-hidden max-h-[90vh] flex flex-col"
+        <div class="bg-white dark:bg-[#1e1f20] rounded-2xl shadow-[0_0_60px_rgba(66,133,244,0.12)] border border-white/5 w-full max-w-md transform scale-[0.97] transition-transform duration-300 ease-out overflow-hidden max-h-[90vh] flex flex-col"
             id="profile-modal-content">
 
             <!-- ── Animated Banner + Avatar ── -->
             <div class="relative h-32 shrink-0 profile-banner-anim z-10 rounded-t-2xl">
-                <div class="absolute inset-0 bg-black/20 pointer-events-none"></div>
+                <div class="absolute inset-0 bg-white dark:bg-black/20 pointer-events-none"></div>
                 <!-- Close button -->
                 <button id="close-profile-btn"
-                    class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-white/70 hover:text-white hover:bg-black/40 transition-all z-10">
+                    class="absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-900 dark:text-white/70 hover:text-gray-900 dark:text-white hover:bg-white dark:bg-black/40 transition-all z-10">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                         stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -575,11 +603,11 @@
                 <div class="absolute -bottom-6 left-6">
                     <div class="relative group cursor-pointer transition-transform duration-300 hover:scale-[1.03] active:scale-95">
                         <div id="profile-avatar-preview"
-                            class="w-24 h-24 rounded-full bg-[#000000] border-4 border-[#1e1f20] flex items-center justify-center text-3xl font-bold text-white bg-cover bg-center overflow-hidden shadow-lg">
+                            class="w-24 h-24 rounded-full bg-white dark:bg-[#000000] border-4 border-[#1e1f20] flex items-center justify-center text-3xl font-bold text-gray-900 dark:text-white bg-cover bg-center overflow-hidden shadow-lg">
                             <span id="profile-avatar-preview-text">U</span>
                         </div>
                         <label
-                            class="absolute inset-0 rounded-full flex items-center justify-center bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                            class="absolute inset-0 rounded-full flex items-center justify-center bg-white dark:bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
                                 stroke-linecap="round" stroke-linejoin="round">
                                 <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
@@ -596,55 +624,55 @@
                 <!-- Name + email row -->
                 <div class="flex items-start justify-between mb-6">
                     <div>
-                        <p class="text-[22px] font-bold text-white leading-tight" id="profile-display-name-preview">User</p>
-                        <p class="text-[13px] text-gray-500 mt-0.5 font-medium" id="profile-email-display">user@email.com</p>
+                        <p class="text-[22px] font-bold text-gray-900 dark:text-white leading-tight" id="profile-display-name-preview">User</p>
+                        <p class="text-[13px] text-gray-500 dark:text-gray-500 mt-0.5 font-medium" id="profile-email-display">user@email.com</p>
                     </div>
                 </div>
 
                 <!-- Display Name & Password Card -->
-                <div class="rounded-xl border border-[#2d2e30] bg-[#17181a] mb-6 overflow-hidden shadow-sm">
+                <div class="rounded-xl border border-gray-300 dark:border-[#2d2e30] bg-gray-50 dark:bg-[#17181a] mb-6 overflow-hidden shadow-sm">
                     <!-- Display Name Block -->
-                    <div class="p-4 border-b border-[#2d2e30]">
-                        <label class="block text-xs font-bold uppercase tracking-widest text-[#8e9092] mb-2">Display Name</label>
+                    <div class="p-4 border-b border-gray-300 dark:border-[#2d2e30]">
+                        <label class="block text-xs font-bold uppercase tracking-widest text-gray-500 dark:text-[#8e9092] mb-2">Display Name</label>
                         <input type="text" id="profile-name-input" value="User"
-                            class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[15px] placeholder-gray-600 shadow-inner"
+                            class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[15px] placeholder-gray-600 shadow-inner"
                             placeholder="Enter your display name"
                             oninput="document.getElementById('profile-display-name-preview').textContent = this.value || 'User'">
                     </div>
 
                     <!-- Change Password Accordion -->
                     <button id="toggle-password-section"
-                        class="w-full flex items-center justify-between px-4 py-3.5 hover:bg-[#1e1f21] transition-colors group">
+                        class="w-full flex items-center justify-between px-4 py-3.5 hover:bg-white dark:bg-[#1e1f21] transition-colors group">
                         <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-[#2a2b2d] flex items-center justify-center group-hover:bg-[#333537] transition-colors">
+                            <div class="w-8 h-8 rounded-full bg-gray-100 dark:bg-[#2a2b2d] flex items-center justify-center group-hover:bg-gray-200 dark:bg-[#333537] transition-colors">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#a0a2a4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
                                     <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
                                 </svg>
                             </div>
-                            <span class="text-[14.5px] font-medium text-gray-300 group-hover:text-gray-200 transition-colors">Change Password</span>
+                            <span class="text-[14.5px] font-medium text-gray-700 dark:text-gray-300 group-hover:text-gray-800 dark:text-gray-200 transition-colors">Change Password</span>
                         </div>
-                        <svg id="pw-chevron" class="transition-transform duration-300 text-gray-500 group-hover:text-gray-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <svg id="pw-chevron" class="transition-transform duration-300 text-gray-500 dark:text-gray-500 group-hover:text-gray-700 dark:text-gray-300" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                             <polyline points="6 9 12 15 18 9"></polyline>
                         </svg>
                     </button>
                     <!-- Expandable section -->
                     <div id="password-section-wrapper" class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-out">
                         <div class="overflow-hidden">
-                            <div class="px-4 pb-4 space-y-3 pt-1 border-t border-[#2d2e30]">
-                                <p class="text-[13px] text-gray-500 font-medium pb-1">Enter your current password to set a new one.</p>
+                            <div class="px-4 pb-4 space-y-3 pt-1 border-t border-gray-300 dark:border-[#2d2e30]">
+                                <p class="text-[13px] text-gray-500 dark:text-gray-500 font-medium pb-1">Enter your current password to set a new one.</p>
                                 <input type="password" id="current-password-input"
-                                    class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="Current password">
                                 <input type="password" id="new-password-input"
-                                    class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="New password (min. 6 chars)">
                                 <input type="password" id="confirm-password-input"
-                                    class="w-full bg-[#000000] border border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
+                                    class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-3.5 py-2.5 text-gray-100 focus:outline-none focus:border-[#4285f4] focus:ring-2 focus:ring-[#4285f4]/30 transition-[border-color,box-shadow] duration-300 text-[14px] shadow-inner"
                                     placeholder="Confirm new password">
                                 <div id="password-status" class="text-xs hidden font-medium pt-1"></div>
                                 <button id="update-password-btn"
-                                    class="w-full py-2.5 mt-1 rounded-lg text-sm font-semibold bg-[#4285f4] hover:bg-[#5a95f5] text-white transition-colors relative flex items-center justify-center">
+                                    class="w-full py-2.5 mt-1 rounded-lg text-sm font-semibold bg-[#4285f4] hover:bg-[#5a95f5] text-gray-900 dark:text-white transition-colors relative flex items-center justify-center">
                                     <span class="btn-text">Update Password</span>
                                 </button>
                             </div>
@@ -666,11 +694,11 @@
                     </button>
                     <div class="flex gap-2">
                         <button id="cancel-profile-btn"
-                            class="px-5 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-200 hover:bg-[#2a2b2c] transition-colors">
+                            class="px-5 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:bg-[#2a2b2c] transition-colors">
                             Cancel
                         </button>
                         <button id="save-profile-btn"
-                            class="min-w-[80px] px-6 py-2 rounded-lg text-sm font-bold bg-[#4285f4] hover:bg-[#5a95f5] text-white transition-all active:scale-[0.97] flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(66,133,244,0.15)] hover:shadow-[0_0_20px_rgba(66,133,244,0.3)]">
+                            class="min-w-[80px] px-6 py-2 rounded-lg text-sm font-bold bg-[#4285f4] hover:bg-[#5a95f5] text-gray-900 dark:text-white transition-all active:scale-[0.97] flex items-center justify-center gap-1.5 shadow-[0_0_15px_rgba(66,133,244,0.15)] hover:shadow-[0_0_20px_rgba(66,133,244,0.3)]">
                             <span class="btn-text">Save</span>
                         </button>
                     </div>
@@ -684,32 +712,32 @@
     <!-- Custom Dialog Modals -->
     <div id="confirm-modal"
         class="fixed inset-0 modal-backdrop z-[999] flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
-        <div class="bg-[#1e1f20] border border-[#333537] rounded-2xl shadow-2xl w-full max-w-[400px] p-6 transform scale-95 transition-transform duration-200"
+        <div class="bg-white dark:bg-[#1e1f20] border border-gray-300 dark:border-[#333537] rounded-2xl shadow-2xl w-full max-w-[400px] p-6 transform scale-95 transition-transform duration-200"
             id="confirm-modal-content">
-            <h3 class="text-xl font-medium text-gray-200 mb-2" id="confirm-title">Are you sure?</h3>
-            <p class="text-gray-400 text-sm mb-6" id="confirm-message">This action cannot be undone.</p>
+            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200 mb-2" id="confirm-title">Are you sure?</h3>
+            <p class="text-gray-600 dark:text-gray-400 text-sm mb-6" id="confirm-message">This action cannot be undone.</p>
             <div class="flex justify-end gap-3">
                 <button id="cancel-confirm-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#333537] transition-colors">Cancel</button>
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-[#333537] transition-colors">Cancel</button>
                 <button id="action-confirm-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-500 text-white transition-colors">Confirm</button>
+                    class="px-4 py-2 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-500 text-gray-900 dark:text-white transition-colors">Confirm</button>
             </div>
         </div>
     </div>
 
     <div id="rename-modal"
         class="fixed inset-0 modal-backdrop z-[999] flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
-        <div class="bg-[#1e1f20] border border-[#333537] rounded-2xl shadow-2xl w-full max-w-[400px] p-6 transform scale-95 transition-transform duration-200"
+        <div class="bg-white dark:bg-[#1e1f20] border border-gray-300 dark:border-[#333537] rounded-2xl shadow-2xl w-full max-w-[400px] p-6 transform scale-95 transition-transform duration-200"
             id="rename-modal-content">
-            <h3 class="text-xl font-medium text-gray-200 mb-4">Rename Chat</h3>
+            <h3 class="text-xl font-medium text-gray-800 dark:text-gray-200 mb-4">Rename Chat</h3>
             <input type="text" id="rename-chat-input"
-                class="w-full bg-[#000000] border border-[#333537] rounded-lg px-4 py-2.5 text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-6"
+                class="w-full bg-white dark:bg-[#000000] border border-gray-300 dark:border-[#333537] rounded-lg px-4 py-2.5 text-gray-800 dark:text-gray-200 focus:outline-none focus:border-blue-500 transition-all mb-6"
                 placeholder="Enter new chat name...">
             <div class="flex justify-end gap-3">
                 <button id="cancel-rename-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-300 hover:bg-[#333537] transition-colors">Cancel</button>
+                    class="px-4 py-2 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:bg-[#333537] transition-colors">Cancel</button>
                 <button id="save-rename-btn"
-                    class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors">Save</button>
+                    class="px-4 py-2 rounded-lg text-sm font-medium bg-blue-600 hover:bg-blue-500 text-gray-900 dark:text-white transition-colors">Save</button>
             </div>
         </div>
     </div>
