@@ -72,14 +72,13 @@ export async function copyToClipboard(text, btn, toastMsg = "Copied to clipboard
 export function parseAIContent(text) {
     let formattedText = text;
 
+    // Extract base64 images BEFORE markdown parsing to prevent DOMPurify from stripping them.
+    // FIX: regex now uses [^)] to consume the closing ) properly, no trailing ) left in text.
     let extractedImages = [];
-    formattedText = formattedText.replace(/!\[.*?\]\((data:image\/.*?)(?:\)|$)/g, (match, base64Data) => {
+    formattedText = formattedText.replace(/!\[([^\]]*)\]\((data:image\/[^)]+)\)/g, (match, alt, base64Data) => {
         extractedImages.push(base64Data);
         return `[[MASSIVE_IMAGE_${extractedImages.length - 1}]]`;
     });
-
-    formattedText = formattedText.replace(/<think>/g, "[[THINK_START]]").replace(/<\/think>/g, "[[THINK_END]]");
-    formattedText = formattedText.replace(/\[\[THINK_START\]\]/g, '<think>').replace(/\[\[THINK_END\]\]/g, '</think>');
 
     let thinkCount = (formattedText.match(/<think>/g) || []).length;
     let endThinkCount = (formattedText.match(/<\/think>/g) || []).length;
@@ -90,11 +89,17 @@ export function parseAIContent(text) {
 
     let sanitizedHtml = DOMPurify.sanitize(marked.parse(formattedText), {
         ADD_TAGS: ['details', 'summary', 'button', 'svg', 'path', 'rect', 'polyline', 'line', 'circle', 'img'],
-        ADD_ATTR: ['class', 'open', 'data-text', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'title', 'style', 'src', 'alt', 'loading', 'decoding']
+        ADD_ATTR: ['class', 'open', 'data-text', 'viewBox', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin', 'title', 'style', 'src', 'alt', 'loading', 'decoding'],
+        // Allow https: Cloudinary URLs in img src; data: URIs are reinserted after sanitize via extractedImages
+        ALLOW_DATA_ATTR: false
     });
 
+    // Reinsert base64 images AFTER DOMPurify — DOMPurify strips data: URIs from src by default.
+    // We bypass this by doing string replacement after sanitization is complete.
     extractedImages.forEach((base64Data, index) => {
-        sanitizedHtml = sanitizedHtml.replace(`[[MASSIVE_IMAGE_${index}]]`, `<img src="${base64Data}" alt="Processed Image" loading="lazy" decoding="async" />`);
+        const placeholder = `[[MASSIVE_IMAGE_${index}]]`;
+        const imgTag = `<img src="${base64Data}" alt="Processed Image" class="max-w-full rounded-xl my-2 border border-gray-300 dark:border-[#333537]" style="max-height:500px;display:block;" loading="lazy" decoding="async">`;
+        sanitizedHtml = sanitizedHtml.replace(placeholder, imgTag);
     });
 
     return sanitizedHtml;

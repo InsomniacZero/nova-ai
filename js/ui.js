@@ -151,11 +151,12 @@ export function processChatImageFile(file) {
             state.currentSelectedImages.push(canvas.toDataURL('image/jpeg', 0.8));
             renderImagePreviews();
             handleInput();
+            // FIX: scroll AFTER preview is rendered, not before the async load completes
+            imagePreviewList.scrollTo({ left: 10000, behavior: 'smooth' });
         };
         img.src = e.target.result;
     };
     reader.readAsDataURL(file);
-    imagePreviewList.scrollTo({ left: 10000, behavior: 'smooth' });
 }
 
 export function processChatTextFile(file) {
@@ -169,9 +170,10 @@ export function processChatTextFile(file) {
         state.currentSelectedFiles.push({ name: file.name, content: e.target.result });
         renderImagePreviews();
         handleInput();
+        // FIX: scroll AFTER preview is rendered
+        imagePreviewList.scrollTo({ left: 10000, behavior: 'smooth' });
     };
     reader.readAsText(file);
-    imagePreviewList.scrollTo({ left: 10000, behavior: 'smooth' });
 }
 
 export function scrollToBottom() {

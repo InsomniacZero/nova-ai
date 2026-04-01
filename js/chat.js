@@ -104,7 +104,7 @@ export function appendMessageUI(msgObj, msgIndex, animate = true) {
         const textContent = safeContent.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
         let avatarHtml = state.userProfile.avatar
             ? `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-cover bg-center" style="background-image: url('${state.userProfile.avatar}')"></div></div>`
-            : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-[#f0f0f0] dark:bg-[#000000] text-gray-900 dark:text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
+            : `<div class="w-8 h-8 shrink-0 user-glow-wrapper translate-y-1"><div class="user-glow-inner bg-gray-300 dark:bg-[#000000] text-gray-800 dark:text-white flex items-center justify-center text-xs font-bold">${userFirstName.charAt(0).toUpperCase()}</div></div>`;
 
         let imageHtml = '';
         if (msgObj.images && msgObj.images.length > 0) {
@@ -129,8 +129,8 @@ export function appendMessageUI(msgObj, msgIndex, animate = true) {
                 <div class="msg-container flex items-start gap-4 justify-end ${animate ? 'opacity-0 transition-opacity duration-300' : ''}">
                     <div class="flex-1 min-w-0 flex flex-col items-end pl-12 relative z-0">
                         <div class="flex items-center gap-2 mb-1">
-                            <span class="text-xs text-gray-600">${timeStr}</span>
-                            <span class="text-sm text-gray-700 dark:text-gray-300 font-medium">${userFirstName}</span>
+                            <span class="text-xs text-gray-500">${timeStr}</span>
+                            <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">${userFirstName}</span>
                         </div>
                         ${imageHtml || filesHtml ? `<div class="w-full flex flex-col items-end mb-1">${imageHtml}${filesHtml}</div>` : ''}
                         <div class="flex items-center gap-1.5">
@@ -143,7 +143,7 @@ export function appendMessageUI(msgObj, msgIndex, animate = true) {
                                 </button>
                             </div>
                             ${textContent.trim() ? `
-                            <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-gray-900 dark:text-white shadow-sm">
+                            <div class="bg-[#1451b5] px-5 py-3.5 rounded-3xl rounded-tr-sm text-[15px] leading-relaxed text-white shadow-sm">
                                 ${textContent.replace(/\n/g, '<br>')}
                             </div>
                             ` : ''}
@@ -268,22 +268,23 @@ export async function startMessageFlow(regenText = null, regenImages = null, reg
     const hasImageInCurrentInput = imagesToUse.length > 0;
 
     if (!isRegen) {
+        // FIX: Capture files from state BEFORE the edit-mode reset might clear them
+        const filesToUse = [...state.currentSelectedFiles];
+
         if (state.isEditingMode) {
             state.isEditingMode = false;
             state.chatSnapshotBeforeEdit = null;
             const banner = document.getElementById('edit-mode-banner');
             if (banner) { banner.classList.add('hidden'); banner.classList.remove('flex'); }
             saveHistory();
-            state.currentSelectedFiles = [];
         }
-        const filesToUse = isRegen ? regenFiles : [...state.currentSelectedFiles];
         const userMsg = { role: 'user', content: text, images: imagesToUse, files: filesToUse, timestamp: getTimeString() };
         addMessageToHistory(userMsg);
         appendMessageUI(userMsg, getActiveChat().messages.length - 1);
         chatInput.value = '';
         chatInput.style.height = 'auto';
         state.currentSelectedImages = [];
-        state.currentSelectedFiles = []; // BUG 5 FIX: clear files from state after dispatching
+        state.currentSelectedFiles = [];
         imagePreviewContainer.classList.add('hidden');
         chatImageInput.value = '';
     }
