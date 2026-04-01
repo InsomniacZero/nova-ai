@@ -348,7 +348,13 @@ CRITICAL RULE: NEVER say you cannot process, edit, or generate images. Your app 
     try {
         const response = await fetch(`${state.PYTHON_SERVER_URL}/api/chat`, {
             method: "POST",
-            headers: { "Authorization": "Bearer local-proxy-managed", "HTTP-Referer": window.location.href, "X-Title": "Nova UI", "Content-Type": "application/json" },
+            headers: {
+                "Authorization": "Bearer local-proxy-managed",
+                "HTTP-Referer": window.location.href,
+                "X-Title": "Nova UI",
+                "Content-Type": "application/json",
+                "ngrok-skip-browser-warning": "true" // CRITICAL: bypass ngrok free-tier HTML interstitial
+            },
             body: JSON.stringify({ "model": MODEL_TO_USE, "messages": apiMessages, "stream": true, "reasoning": { "enabled": true } }),
             signal: state.currentAbortController.signal
         });
@@ -436,6 +442,31 @@ CRITICAL RULE: NEVER say you cannot process, edit, or generate images. Your app 
 
         const footerEl = document.getElementById(`footer-${state.currentStreamingMsgId}`);
         if (footerEl) { footerEl.classList.remove("hidden"); void footerEl.offsetWidth; footerEl.classList.remove("opacity-0"); }
+
+        // IMAGE GENERATION FIX: If AI returned a /api/generate-image URL, fetch it and convert to base64
+        // This is necessary because ngrok free tier serves an interstitial page for direct <img src> loads.
+        const genImgRegex = /!\[([^\]]*)\]\((https?:\/\/[^)]*\/api\/generate-image\?[^)]+)\)/g;
+        let genMatch;
+        while ((genMatch = genImgRegex.exec(fullText)) !== null) {
+            const originalMarkdown = genMatch[0];
+            const alt = genMatch[1];
+            const imageUrl = genMatch[2];
+            try {
+                const imgResponse = await fetch(imageUrl, { headers: { "ngrok-skip-browser-warning": "true" } });
+                if (imgResponse.ok) {
+                    const blob = await imgResponse.blob();
+                    const reader = new FileReader();
+                    const base64Url = await new Promise((resolve) => {
+                        reader.onloadend = () => resolve(reader.result);
+                        reader.readAsDataURL(blob);
+                    });
+                    fullText = fullText.replace(originalMarkdown, `![${alt}](${base64Url})`);
+                }
+            } catch (e) {
+                console.warn('Image generation fetch failed:', e);
+            }
+        }
+
         completeGeneration(fullText);
 
     } catch (error) {

@@ -80,6 +80,15 @@ export function parseAIContent(text) {
         return `[[MASSIVE_IMAGE_${extractedImages.length - 1}]]`;
     });
 
+    // Also extract /api/generate-image URLs — these can't be loaded by <img> through ngrok's
+    // free-tier interstitial. Show a loading placeholder during streaming; chat.js will fetch
+    // and convert them to base64 data URLs after the stream completes.
+    let extractedGenUrls = [];
+    formattedText = formattedText.replace(/!\[([^\]]*)\]\((https?:\/\/[^)]*\/api\/generate-image\?[^)]+)\)/g, (match, alt, url) => {
+        extractedGenUrls.push({ alt, url });
+        return `[[GEN_IMAGE_${extractedGenUrls.length - 1}]]`;
+    });
+
     let thinkCount = (formattedText.match(/<think>/g) || []).length;
     let endThinkCount = (formattedText.match(/<\/think>/g) || []).length;
 
@@ -100,6 +109,14 @@ export function parseAIContent(text) {
         const placeholder = `[[MASSIVE_IMAGE_${index}]]`;
         const imgTag = `<img src="${base64Data}" alt="Processed Image" class="max-w-full rounded-xl my-2 border border-gray-300 dark:border-[#333537]" style="max-height:500px;display:block;" loading="lazy" decoding="async">`;
         sanitizedHtml = sanitizedHtml.replace(placeholder, imgTag);
+    });
+
+    // Reinsert /api/generate-image URL placeholders as a loading spinner during streaming.
+    // chat.js will fetch the actual image after the stream completes and re-render with base64.
+    extractedGenUrls.forEach((item, index) => {
+        const placeholder = `[[GEN_IMAGE_${index}]]`;
+        const loadingHtml = `<div class="flex items-center gap-3 p-4 my-2 bg-gray-100 dark:bg-[#282a2c] border border-gray-300 dark:border-[#333537] rounded-xl"><div class="w-5 h-5 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div><span class="text-sm text-gray-500 dark:text-gray-400">Generating image…</span></div>`;
+        sanitizedHtml = sanitizedHtml.replace(placeholder, loadingHtml);
     });
 
     return sanitizedHtml;
