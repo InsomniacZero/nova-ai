@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from rembg import remove, new_session
+import re
 import httpx
 import base64
 import json
@@ -94,7 +95,7 @@ async def handle_image_task(prompt: str, image_b64: str):
         t = text.lower()
         # Normalize abbreviations
         # Use word-boundary-safe replacements so "bg" doesn't match inside other words
-        import re
+        # BUG 10 FIX: import re moved to module top level
         # Replace standalone "bg" with "background"
         t = re.sub(r'\bbg\b', 'background', t)
         
@@ -187,7 +188,8 @@ async def handle_image_task(prompt: str, image_b64: str):
             traceback.print_exc()
             return "**Internal System Error:** The upscaler crashed."
             
-    return None
+    # BUG 11 FIX: Return a descriptive message instead of None so the user gets clear feedback
+    return "**No image tool matched.** Please specify whether you want to remove the background, upscale, or describe the image."
 
 # --- THE ROUTER ---
 @app.post("/api/chat")

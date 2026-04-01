@@ -3,8 +3,7 @@
 // This file imports them, wires up DOMContentLoaded, sidebar, swipe, and global click delegation.
 
 import { state, DEFAULT_PERSONAS, on, emit } from './state.js';
-import { initMarked } from './utils.js';
-import { copyToClipboard } from './utils.js';
+import { initMarked, copyToClipboard } from './utils.js';
 import { initUI, openModal, closeModal, uiConfirm, handleInput, scrollToBottom, setSendButtonState, renderImagePreviews, getIsKeyboardOpen, getChatInput, getChatInner } from './ui.js';
 import { initAuth, resetAuthUI, doSignOut } from './auth.js';
 import { initPersonas, getActivePersona, updatePersonaUI, updateHeaderTitle, handleEditPersona, handleDeletePersona } from './persona.js';
@@ -94,6 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             state.chats = [];
             state.currentChatId = null;
             saveHistory();
+            renderHistorySidebar(); // BUG 7 FIX: update sidebar immediately after clear
             renderChatHistory();
         });
     });

@@ -59,7 +59,6 @@ export function renderHistorySidebar() {
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 ${isActive ? 'text-blue-400' : 'text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:text-gray-300'}"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
                         <span class="truncate pointer-events-none">${safeTitle}</span>
                     </button>
-                    <button class="chat-options-btn absolute right-2 p-1.5 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white hover:bg-[#505357] opacity-0 group-hover:opacity-100 transition-all" data-id="${chat.id}" title="Options"></button>
                     <button class="chat-options-btn absolute right-2 p-1.5 rounded-md text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:text-white hover:bg-[#505357] opacity-0 group-hover:opacity-100 transition-all" data-id="${chat.id}" title="Options">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
                     </button>
@@ -284,6 +283,7 @@ export async function startMessageFlow(regenText = null, regenImages = null, reg
         chatInput.value = '';
         chatInput.style.height = 'auto';
         state.currentSelectedImages = [];
+        state.currentSelectedFiles = []; // BUG 5 FIX: clear files from state after dispatching
         imagePreviewContainer.classList.add('hidden');
         chatImageInput.value = '';
     }
@@ -452,7 +452,10 @@ CRITICAL RULE: NEVER say you cannot process, edit, or generate images. Your app 
 
 function completeGeneration(content) {
     state.isGenerating = false;
-    let cleanContent = content.replace(/<think>[\s\S]*?<\/think>[\n\s]*/g, '');
+    // BUG 4 FIX: strip complete think blocks, then any unclosed opening tag
+    let cleanContent = content
+        .replace(/<think>[\s\S]*?<\/think>[\n\s]*/g, '')
+        .replace(/<think>[\s\S]*/g, '').trim();
 
     if (state.currentStreamingMsgId) {
         document.getElementById(state.currentStreamingMsgId)?.remove();

@@ -55,7 +55,7 @@ export function setSendButtonState(s) {
         sendBtn.setAttribute('disabled', 'true');
         iconSend.classList.remove('hidden'); iconStop.classList.add('hidden');
     } else if (s === 'ready') {
-        sendBtn.className = 'p-2 bg-[#f0f0f0] text-black hover:bg-gray-200 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center w-10 h-10';
+        sendBtn.className = 'p-2 bg-gray-800 dark:bg-white text-white dark:text-black hover:bg-gray-700 dark:hover:bg-gray-100 rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center w-10 h-10';
         sendBtn.removeAttribute('disabled');
         iconSend.classList.remove('hidden'); iconStop.classList.add('hidden');
     } else if (s === 'generating') {
